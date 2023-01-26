@@ -20,17 +20,17 @@ $ make install
 
 ## Usage
 
-The Makefile will install both static and shared versions of the library, use whichever you prefer. Most users will just want to include `locket.hpp`, which itself includes all the other headers. All code in the library is found within the `locket` namespace.
+The Makefile will install both static and shared versions of the library, use whichever you prefer. Most users will just want to include `locket.hpp`, which itself includes all the other headers. All code in the library is found within the `locket` namespace. Function-level detail is not provided in the documentation for two reasons. a) Socket member functions are designed to behave similarly to the underlying API functions with which they share their names. b) I'm lazy.
+
+I recommended having a basic understanding of the Linux sockets API before making use of this library.
 
 ### Sockets
 
-I suggest familiarizing yourself with the underlying Linux sockets API before making use of this library.
+Socket classes wraps a system socket handle and maintains its lifetime. When the object goes out of scope, it closes the underlying socket handle. Socket objects are moveable but not copyable. Socket classes also abstracts socket operations such as reading, writing, and connecting. 
 
-Socket classes wraps a system socket handle and maintains its lifetime. When the object goes out of scope, it closes the underlying socket handle. Socket objects are moveable but not copyable. Socket classes also abstracts socket operations such as reading, writing, and connecting. The `locket::socket` class is not intended to be used by itself, rather it serves as an abstract base class for more specific socket types.
+The base socket class is represented by the `locket::socket` class. It is not intended to be used by itself, rather it serves as an abstract base class for more specific socket types. All sockets (except for `locket::connected_stream_socket`) may be bound to a specific address.
 
-All sockets (except for `locket::connected_stream_socket`) may be bound to a specific address.
-
-Datagram sockets are representend by the `locket::dgram_socket` class. Datagram sockets can perform IO in both connected and disconnected states.
+Datagram sockets are represented by the `locket::dgram_socket` class. Datagram sockets can perform IO in both connected and disconnected states.
 
 A basic stream socket is represented by the `locket::stream_socket` class. The base stream socket class shouldn't be used by itself, rather it serves as a base class for more specialized types of stream sockets.
 
@@ -38,7 +38,19 @@ Client stream sockets are represented by the `locket::client_stream_socket_class
 
 Server stream sockets are represented by the `locket::server_stream_socket` class. Server stream sockets must be bound and listening before they can accept connections. IO is not performed directly through a server stream socket; rather a connected stream socket will be returned after accepting a new connection.
 
-Connected stream sockets are represented by the `locket::connected_stream_socket_class`. They represent a connection created by a server stream socket between itself and a client. Connected stream sockets should only be created by a server stream socket, not as a standalone socket. Connected stream sockets TODO continue from here
+Connected stream sockets are represented by the `locket::connected_stream_socket_class`. They represent a connection created by a server stream socket between itself and a client. Connected stream sockets should only be created by a server stream socket, not as a standalone socket.
+
+### Socket Addresses
+
+Socket address classes encapsulates the raw address structures used by the underlying API and makes them easier to work with. They also serve the purpose of separating the type of socket (datagram, stream, etc.) from the domain (unix, inet, etc.). Many socket class constructors and functions take address classes as arguments. Socket address classes also contain functions to simplify the copying of address objects through a polymorphic pointer when the actual type is unknown.
+
+The base address class is represented by the `locket::socket_addr` class. It is not intended to be used by itself, rather it serves as an abstract base class for more specific socket types. It also contains an enumeration with values corresponding to the various socket domains (unix, inet4, inet6).
+
+Unix domain socket addresses are represented by the `locket::unix_socket_addr` class. This address contains the path of the socket file. It also provides support for abstract unix domain sockets, in which case it contains the name of the socket rather than the path.
+
+Internet domain socket addresses are represented by the `locket::inet_socket_addr` class. This class isn't intended to be used by itself, rather it serves as an abstract base class for more specialized internet domain addresses. It contains enumerations for keeping track of IP versions (IPv4 and IPv6) as well as byte order (which most people shouldn't have to worry about).
+
+Internet domain IPv4 and IPv6 socket addresses are represented by the `locket::inet4_socket_addr` and `locket::inet6_socket_addr` classes respectively. They behave similarly but differ in their internal implementation due to how the underlying API works. These addresses contain ip addresses and port numbers. Their constructors accept both numeric ip addresses as well as textual hostnames.
 
 ### Error Handling
 

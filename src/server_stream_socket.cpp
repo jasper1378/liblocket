@@ -80,6 +80,16 @@ locket::connected_stream_socket locket::server_stream_socket::accept() const
 
     try
     {
+        if (get_bound_addr == nullptr)
+        {
+            throw std::runtime_error{ "socket is not bound" };
+        }
+
+        if (m_is_listening == false)
+        {
+            throw std::runtime_error{ "socket is not listening" };
+        }
+
         switch (get_domain())
         {
             case socket_addr::sock_domain::UNIX:

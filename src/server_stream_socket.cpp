@@ -80,7 +80,7 @@ locket::connected_stream_socket locket::server_stream_socket::accept() const
 
     try
     {
-        if (get_bound_addr == nullptr)
+        if (get_bound_addr() == nullptr)
         {
             throw std::runtime_error{ "socket is not bound" };
         }

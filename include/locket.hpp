@@ -10,9 +10,9 @@
 #include "inet_6_socket_addr.hpp"
 #include "inet_socket_addr.hpp"
 #include "server_stream_socket.hpp"
+#include "socket.hpp"
 #include "socket_addr.hpp"
 #include "socket_error.hpp"
-#include "socket.hpp"
 #include "stream_socket.hpp"
 #include "unix_socket_addr.hpp"
 

@@ -14,87 +14,75 @@
 #include <cstddef>
 #include <string>
 
-namespace locket
-{
-    class socket
-    {
-        public:
+namespace locket {
+class socket {
+public:
+  struct dummy_type_bind {};
+  struct dummy_type_connect {};
+  struct dummy_type_listen {};
 
-            struct dummy_type_bind{};
-            struct dummy_type_connect{};
-            struct dummy_type_listen{};
+  enum class shutdown_how {
+    READ = SHUT_RD,
+    WRITE = SHUT_WR,
+    READWRITE = SHUT_RDWR,
+  };
 
-            enum class shutdown_how
-            {
-                READ = SHUT_RD,
-                WRITE = SHUT_WR,
-                READWRITE = SHUT_RDWR,
-            };
+protected:
+  int m_sockfd;
 
-        protected:
+private:
+  socket_addr::sock_domain m_domain;
+  socket_addr *m_bound_addr;
 
-            int m_sockfd;
+protected:
+  static constexpr size_t m_k_max_message_length{1024};
 
-        private:
+public:
+  socket(socket_addr::sock_domain domain);
+  socket(int sockfd);
+  socket(socket &&other);
 
-            socket_addr::sock_domain m_domain;
-            socket_addr* m_bound_addr;
+  socket(const socket &other) = delete;
 
-        protected:
+  virtual ~socket();
 
-            static constexpr size_t m_k_max_message_length{ 1024 };
+public:
+  int get_sock_fd();
+  socket_addr::sock_domain get_domain() const;
+  virtual socket_addr *get_bound_addr() const;
+  virtual void bind(const socket_addr *bind_addr);
+  int create_clone();
+  void shutdown(shutdown_how how);
 
-        public:
+  template <typename T>
+  void set_socket_option(int option_name, const T &option_value) {
+    if (setsockopt(m_sockfd, SOL_SOCKET, option_name, &option_value,
+                   sizeof(option_value)) == -1) {
+      throw socket_error{"setsockopt()", errno};
+    }
+  }
 
-            socket(socket_addr::sock_domain domain);
-            socket(int sockfd);
-            socket(socket&& other);
+  template <typename T> T get_socket_option(int option_name) const {
+    T option_value{};
+    socklen_t option_length{sizeof(T)};
 
-            socket(const socket& other) =delete;
+    if (getsockopt(m_sockfd, SOL_SOCKET, option_name, &option_value,
+                   &option_length) == -1) {
+      throw socket_error{"getsockopt()", errno};
+    }
 
-            virtual ~socket();
+    return option_value;
+  }
 
-        public:
+public:
+  socket &operator=(socket &&other);
 
-            int get_sock_fd();
-            socket_addr::sock_domain get_domain() const;
-            virtual socket_addr* get_bound_addr() const;
-            virtual void bind(const socket_addr* bind_addr);
-            int create_clone();
-            void shutdown(shutdown_how how);
+  socket &operator=(const socket &other) = delete;
 
-            template<typename T> void set_socket_option(int option_name, const T& option_value)
-            {
-                if (setsockopt(m_sockfd, SOL_SOCKET, option_name, &option_value, sizeof(option_value)) == -1)
-                {
-                    throw socket_error{ "setsockopt()", errno };
-                }
-            }
-
-            template<typename T> T get_socket_option(int option_name) const
-            {
-                T option_value{};
-                socklen_t option_length{ sizeof(T) };
-
-                if (getsockopt(m_sockfd, SOL_SOCKET, option_name, &option_value, &option_length) == -1)
-                {
-                    throw socket_error{ "getsockopt()", errno };
-                }
-
-                return option_value;
-            }
-
-        public:
-
-            socket& operator=(socket&& other);
-
-            socket& operator=(const socket& other) =delete;
-
-        private:
-
-            void close();
-            virtual void init() =0;
-    };
-}
+private:
+  void close();
+  virtual void init() = 0;
+};
+} // namespace locket
 
 #endif

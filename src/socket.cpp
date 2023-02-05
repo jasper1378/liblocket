@@ -28,7 +28,7 @@ locket::socket::socket(int sockfd)
       static_cast<socket_addr::sock_domain>(get_socket_option<int>(SO_DOMAIN));
 }
 
-locket::socket::socket(socket &&other)
+locket::socket::socket(socket &&other) noexcept
     : m_sockfd{other.m_sockfd}, m_domain{std::move(other.m_domain)},
       m_bound_addr{other.m_bound_addr} {
   other.m_sockfd = -1;
@@ -94,7 +94,7 @@ void locket::socket::shutdown(shutdown_how how) {
   }
 }
 
-locket::socket &locket::socket::operator=(socket &&other) {
+locket::socket &locket::socket::operator=(socket &&other) noexcept {
   if (this == &other) {
     return *this;
   }

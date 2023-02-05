@@ -46,7 +46,8 @@ locket::server_stream_socket::server_stream_socket(
 locket::server_stream_socket::server_stream_socket(int sockfd)
     : stream_socket{sockfd}, m_is_listening{false} {}
 
-locket::server_stream_socket::server_stream_socket(server_stream_socket &&other)
+locket::server_stream_socket::server_stream_socket(
+    server_stream_socket &&other) noexcept
     : stream_socket{std::move(other)}, m_is_listening{
                                            std::move(other.m_is_listening)} {}
 
@@ -116,7 +117,7 @@ locket::connected_stream_socket locket::server_stream_socket::accept() const {
 }
 
 locket::server_stream_socket &
-locket::server_stream_socket::operator=(server_stream_socket &&other) {
+locket::server_stream_socket::operator=(server_stream_socket &&other) noexcept {
   if (this == &other) {
     return *this;
   }

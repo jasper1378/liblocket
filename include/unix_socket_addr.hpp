@@ -23,7 +23,7 @@ public:
   explicit unix_socket_addr(const socket_addr *other);
   explicit unix_socket_addr(const sockaddr_un &other);
   unix_socket_addr(const unix_socket_addr &other);
-  unix_socket_addr(unix_socket_addr &&other);
+  unix_socket_addr(unix_socket_addr &&other) noexcept;
 
   ~unix_socket_addr() override;
 
@@ -42,7 +42,7 @@ public:
 
 public:
   unix_socket_addr &operator=(const unix_socket_addr &other);
-  unix_socket_addr &operator=(unix_socket_addr &&other);
+  unix_socket_addr &operator=(unix_socket_addr &&other) noexcept;
 
 private:
   void clear() override;

@@ -44,7 +44,8 @@ locket::client_stream_socket::client_stream_socket(
 locket::client_stream_socket::client_stream_socket(int sockfd)
     : stream_socket{sockfd}, m_connected_addr{nullptr} {}
 
-locket::client_stream_socket::client_stream_socket(client_stream_socket &&other)
+locket::client_stream_socket::client_stream_socket(
+    client_stream_socket &&other) noexcept
     : stream_socket{std::move(other)}, m_connected_addr{
                                            other.m_connected_addr} {
   other.m_connected_addr = nullptr;
@@ -97,7 +98,7 @@ void locket::client_stream_socket::send(const std::string &message,
 }
 
 locket::client_stream_socket &
-locket::client_stream_socket::operator=(client_stream_socket &&other) {
+locket::client_stream_socket::operator=(client_stream_socket &&other) noexcept {
   if (this == &other) {
     return *this;
   }

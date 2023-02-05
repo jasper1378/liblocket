@@ -40,7 +40,7 @@ protected:
 public:
   socket(socket_addr::sock_domain domain);
   socket(int sockfd);
-  socket(socket &&other);
+  socket(socket &&other) noexcept;
 
   socket(const socket &other) = delete;
 
@@ -75,7 +75,7 @@ public:
   }
 
 public:
-  socket &operator=(socket &&other);
+  socket &operator=(socket &&other) noexcept;
 
   socket &operator=(const socket &other) = delete;
 

@@ -30,7 +30,7 @@ locket::connected_stream_socket::connected_stream_socket(
 }
 
 locket::connected_stream_socket::connected_stream_socket(
-    connected_stream_socket &&other)
+    connected_stream_socket &&other) noexcept
     : stream_socket{std::move(other)}, m_connected_addr{
                                            other.m_connected_addr} {
   other.m_connected_addr = nullptr;
@@ -52,8 +52,8 @@ void locket::connected_stream_socket::send(const std::string &message,
   stream_socket::send(message, flags);
 }
 
-locket::connected_stream_socket &
-locket::connected_stream_socket::operator=(connected_stream_socket &&other) {
+locket::connected_stream_socket &locket::connected_stream_socket::operator=(
+    connected_stream_socket &&other) noexcept {
   if (this == &other) {
     return *this;
   }

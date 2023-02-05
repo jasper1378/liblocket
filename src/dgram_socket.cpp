@@ -56,7 +56,7 @@ locket::dgram_socket::dgram_socket(int sockfd)
   }
 }
 
-locket::dgram_socket::dgram_socket(dgram_socket &&other)
+locket::dgram_socket::dgram_socket(dgram_socket &&other) noexcept
     : socket{std::move(other)}, m_connected_addr{other.m_connected_addr},
       m_last_sender_addr{other.m_last_sender_addr} {
   other.m_connected_addr = nullptr;
@@ -211,7 +211,8 @@ locket::socket_addr *locket::dgram_socket::get_last_sender_addr() const {
   return m_last_sender_addr->create_clone();
 }
 
-locket::dgram_socket &locket::dgram_socket::operator=(dgram_socket &&other) {
+locket::dgram_socket &
+locket::dgram_socket::operator=(dgram_socket &&other) noexcept {
   if (this == &other) {
     return *this;
   }

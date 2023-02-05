@@ -61,7 +61,7 @@ locket::inet4_socket_addr::inet4_socket_addr(const sockaddr_in &other)
 locket::inet4_socket_addr::inet4_socket_addr(const inet4_socket_addr &other)
     : m_addr{other.m_addr} {}
 
-locket::inet4_socket_addr::inet4_socket_addr(inet4_socket_addr &&other)
+locket::inet4_socket_addr::inet4_socket_addr(inet4_socket_addr &&other) noexcept
     : m_addr{std::move(other.m_addr)} {}
 
 locket::inet4_socket_addr::~inet4_socket_addr() {}
@@ -130,7 +130,7 @@ locket::inet4_socket_addr::operator=(const inet4_socket_addr &other) {
 }
 
 locket::inet4_socket_addr &
-locket::inet4_socket_addr::operator=(inet4_socket_addr &&other) {
+locket::inet4_socket_addr::operator=(inet4_socket_addr &&other) noexcept {
   if (this == &other) {
     return *this;
   }

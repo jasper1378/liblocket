@@ -25,7 +25,7 @@ public:
   dgram_socket(const socket_addr *bound_addr,
                const socket_addr *connected_addr);
   explicit dgram_socket(int sockfd);
-  dgram_socket(dgram_socket &&other);
+  dgram_socket(dgram_socket &&other) noexcept;
 
   dgram_socket(const dgram_socket &other) = delete;
 
@@ -40,7 +40,7 @@ public:
   socket_addr *get_last_sender_addr() const;
 
 public:
-  dgram_socket &operator=(dgram_socket &&other);
+  dgram_socket &operator=(dgram_socket &&other) noexcept;
 
   dgram_socket &operator=(const dgram_socket &other) = delete;
 

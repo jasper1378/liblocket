@@ -20,7 +20,7 @@ private:
 
 public:
   connected_stream_socket(int sockfd, const socket_addr *connected_addr);
-  connected_stream_socket(connected_stream_socket &&other);
+  connected_stream_socket(connected_stream_socket &&other) noexcept;
 
   connected_stream_socket(const connected_stream_socket &other) = delete;
 
@@ -31,7 +31,7 @@ public:
   void send(const std::string &message, int flags = 0) const override;
 
 public:
-  connected_stream_socket &operator=(connected_stream_socket &&other);
+  connected_stream_socket &operator=(connected_stream_socket &&other) noexcept;
 
   connected_stream_socket &
   operator=(const connected_stream_socket &other) = delete;

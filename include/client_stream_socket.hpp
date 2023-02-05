@@ -26,7 +26,7 @@ public:
   client_stream_socket(const socket_addr *bound_addr,
                        const socket_addr *connected_addr);
   explicit client_stream_socket(int sockfd);
-  client_stream_socket(client_stream_socket &&other);
+  client_stream_socket(client_stream_socket &&other) noexcept;
 
   client_stream_socket(const client_stream_socket &other) = delete;
 
@@ -38,7 +38,7 @@ public:
   void send(const std::string &message, int flags = 0) const override;
 
 public:
-  client_stream_socket &operator=(client_stream_socket &&other);
+  client_stream_socket &operator=(client_stream_socket &&other) noexcept;
 
   client_stream_socket &operator=(const client_stream_socket &other) = delete;
 };

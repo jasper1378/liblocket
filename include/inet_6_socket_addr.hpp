@@ -25,7 +25,7 @@ public:
   explicit inet6_socket_addr(const socket_addr *other);
   explicit inet6_socket_addr(const sockaddr_in6 &other);
   inet6_socket_addr(const inet6_socket_addr &other);
-  inet6_socket_addr(inet6_socket_addr &&other);
+  inet6_socket_addr(inet6_socket_addr &&other) noexcept;
 
   ~inet6_socket_addr() override;
 
@@ -45,7 +45,7 @@ public:
 
 public:
   inet6_socket_addr &operator=(const inet6_socket_addr &other);
-  inet6_socket_addr &operator=(inet6_socket_addr &&other);
+  inet6_socket_addr &operator=(inet6_socket_addr &&other) noexcept;
 
 private:
   void clear() override;

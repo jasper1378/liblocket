@@ -18,7 +18,7 @@ protected:
   explicit stream_socket(socket_addr::sock_domain domain);
   stream_socket(socket::dummy_type_bind, const socket_addr *bound_addr);
   explicit stream_socket(int sockfd);
-  stream_socket(stream_socket &&other);
+  stream_socket(stream_socket &&other) noexcept;
 
   stream_socket(const stream_socket &other) = delete;
 
@@ -26,7 +26,7 @@ public:
   virtual ~stream_socket() override;
 
 public:
-  stream_socket &operator=(stream_socket &&other);
+  stream_socket &operator=(stream_socket &&other) noexcept;
 
   stream_socket &operator=(const stream_socket &other) = delete;
 

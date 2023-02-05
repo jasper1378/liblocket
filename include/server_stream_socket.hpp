@@ -30,7 +30,7 @@ public:
   explicit server_stream_socket(const socket_addr *bound_addr,
                                 int backlog = m_k_backlog);
   explicit server_stream_socket(int sockfd);
-  server_stream_socket(server_stream_socket &&other);
+  server_stream_socket(server_stream_socket &&other) noexcept;
 
   server_stream_socket(const server_stream_socket &other) = delete;
 
@@ -41,7 +41,7 @@ public:
   connected_stream_socket accept() const;
 
 public:
-  server_stream_socket &operator=(server_stream_socket &&other);
+  server_stream_socket &operator=(server_stream_socket &&other) noexcept;
 
   server_stream_socket &operator=(const server_stream_socket &other) = delete;
 };

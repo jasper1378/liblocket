@@ -37,7 +37,7 @@ locket::stream_socket::stream_socket(int sockfd) : socket{sockfd} {
   }
 }
 
-locket::stream_socket::stream_socket(stream_socket &&other)
+locket::stream_socket::stream_socket(stream_socket &&other) noexcept
     : socket{std::move(other)} {}
 
 locket::stream_socket::~stream_socket() {}
@@ -65,7 +65,8 @@ void locket::stream_socket::send(const std::string &message,
   }
 }
 
-locket::stream_socket &locket::stream_socket::operator=(stream_socket &&other) {
+locket::stream_socket &
+locket::stream_socket::operator=(stream_socket &&other) noexcept {
   if (this == &other) {
     return *this;
   }

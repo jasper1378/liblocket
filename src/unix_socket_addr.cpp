@@ -56,7 +56,7 @@ locket::unix_socket_addr::unix_socket_addr(const sockaddr_un &other)
 locket::unix_socket_addr::unix_socket_addr(const unix_socket_addr &other)
     : m_addr{other.m_addr}, m_is_abstract{other.m_is_abstract} {}
 
-locket::unix_socket_addr::unix_socket_addr(unix_socket_addr &&other)
+locket::unix_socket_addr::unix_socket_addr(unix_socket_addr &&other) noexcept
     : m_addr{std::move(other.m_addr)}, m_is_abstract{
                                            std::move(other.m_is_abstract)} {}
 
@@ -118,7 +118,7 @@ locket::unix_socket_addr::operator=(const unix_socket_addr &other) {
 }
 
 locket::unix_socket_addr &
-locket::unix_socket_addr::operator=(unix_socket_addr &&other) {
+locket::unix_socket_addr::operator=(unix_socket_addr &&other) noexcept {
   if (this == &other) {
     return *this;
   }

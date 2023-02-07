@@ -15,6 +15,7 @@
 #include <cerrno>
 #include <cstddef>
 #include <exception>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -108,52 +109,40 @@ std::string locket::dgram_socket::recv(int flags /*= 0*/) const {
       throw socket_error{"recv()", errno};
     }
   } else if (m_connected_addr == nullptr) {
-    socket_addr *last_sender_addr{nullptr};
+    std::unique_ptr<socket_addr> last_sender_addr{nullptr};
 
-    try {
-      switch (get_domain()) {
-      case socket_addr::sock_domain::UNIX:
-        last_sender_addr = new unix_socket_addr;
-        break;
-      case socket_addr::sock_domain::INET4:
-        last_sender_addr = new inet4_socket_addr;
-        break;
-      case socket_addr::sock_domain::INET6:
-        last_sender_addr = new inet6_socket_addr;
-        break;
-      default:
-        throw std::runtime_error{"this should be impossible..."};
-        break;
-      }
-
-      socklen_t last_peer_addr_size{last_sender_addr->size()};
-
-      bytes_revcd =
-          recvfrom(m_sockfd, message_buffer, m_k_max_message_length, flags,
-                   last_sender_addr->socket_addr_ptr(), &last_peer_addr_size);
-      if (bytes_revcd == -1) {
-        if (last_sender_addr != nullptr) {
-          delete last_sender_addr;
-        }
-
-        throw socket_error{"recvfrom()", errno};
-      }
-
-      message_buffer[bytes_revcd] = '\0';
-    } catch (...) {
-      if (last_sender_addr != nullptr) {
-        delete last_sender_addr;
-      }
-
-      throw;
+    switch (get_domain()) {
+    case socket_addr::sock_domain::UNIX:
+      last_sender_addr = std::make_unique<unix_socket_addr>();
+      break;
+    case socket_addr::sock_domain::INET4:
+      last_sender_addr = std::make_unique<inet4_socket_addr>();
+      break;
+    case socket_addr::sock_domain::INET6:
+      last_sender_addr = std::make_unique<inet6_socket_addr>();
+      break;
+    default:
+      throw std::runtime_error{"this should be impossible..."};
+      break;
     }
+
+    socklen_t last_peer_addr_size{last_sender_addr->size()};
+
+    bytes_revcd =
+        recvfrom(m_sockfd, message_buffer, m_k_max_message_length, flags,
+                 last_sender_addr->socket_addr_ptr(), &last_peer_addr_size);
+    if (bytes_revcd == -1) {
+      throw socket_error{"recvfrom()", errno};
+    }
+
+    message_buffer[bytes_revcd] = '\0';
 
     if (m_last_sender_addr != nullptr) {
       delete m_last_sender_addr;
       m_last_sender_addr = nullptr;
     }
 
-    m_last_sender_addr = last_sender_addr;
+    m_last_sender_addr = last_sender_addr.release();
   }
 
   return std::string{message_buffer};

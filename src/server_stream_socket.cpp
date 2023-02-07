@@ -16,6 +16,7 @@
 
 #include <cerrno>
 #include <exception>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -64,9 +65,8 @@ void locket::server_stream_socket::listen(int backlog /*= m_k_backlog*/) {
 }
 
 locket::connected_stream_socket locket::server_stream_socket::accept() const {
-  socket_addr *connected_addr{nullptr};
+  std::unique_ptr<socket_addr> connected_addr{nullptr};
 
-  try {
     if (get_bound_addr() == nullptr) {
       throw std::runtime_error{"socket is not bound"};
     }
@@ -77,13 +77,13 @@ locket::connected_stream_socket locket::server_stream_socket::accept() const {
 
     switch (get_domain()) {
     case socket_addr::sock_domain::UNIX:
-      connected_addr = new unix_socket_addr{};
+      connected_addr = std::make_unique<unix_socket_addr>();
       break;
     case socket_addr::sock_domain::INET4:
-      connected_addr = new inet4_socket_addr{};
+      connected_addr = std::make_unique<inet4_socket_addr>();
       break;
     case socket_addr::sock_domain::INET6:
-      connected_addr = new inet6_socket_addr{};
+      connected_addr = std::make_unique<inet6_socket_addr>();
       break;
     default:
       throw std::runtime_error{"this should be impossible..."};
@@ -99,21 +99,9 @@ locket::connected_stream_socket locket::server_stream_socket::accept() const {
       throw socket_error{"accept()", errno};
     }
 
-    connected_stream_socket connected_stream_socket{new_sockfd, connected_addr};
-
-    if (connected_addr != nullptr) {
-      delete connected_addr;
-    }
+    connected_stream_socket connected_stream_socket{new_sockfd, connected_addr.get()};
 
     return connected_stream_socket;
-
-  } catch (...) {
-    if (connected_addr != nullptr) {
-      delete connected_addr;
-    }
-
-    throw;
-  }
 }
 
 locket::server_stream_socket &

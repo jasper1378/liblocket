@@ -67,41 +67,42 @@ void locket::server_stream_socket::listen(int backlog /*= m_k_backlog*/) {
 locket::connected_stream_socket locket::server_stream_socket::accept() const {
   std::unique_ptr<socket_addr> connected_addr{nullptr};
 
-    if (get_bound_addr() == nullptr) {
-      throw std::runtime_error{"socket is not bound"};
-    }
+  if (get_bound_addr() == nullptr) {
+    throw std::runtime_error{"socket is not bound"};
+  }
 
-    if (m_is_listening == false) {
-      throw std::runtime_error{"socket is not listening"};
-    }
+  if (m_is_listening == false) {
+    throw std::runtime_error{"socket is not listening"};
+  }
 
-    switch (get_domain()) {
-    case socket_addr::sock_domain::UNIX:
-      connected_addr = std::make_unique<unix_socket_addr>();
-      break;
-    case socket_addr::sock_domain::INET4:
-      connected_addr = std::make_unique<inet4_socket_addr>();
-      break;
-    case socket_addr::sock_domain::INET6:
-      connected_addr = std::make_unique<inet6_socket_addr>();
-      break;
-    default:
-      throw std::runtime_error{"this should be impossible..."};
-      break;
-    }
+  switch (get_domain()) {
+  case socket_addr::sock_domain::UNIX:
+    connected_addr = std::make_unique<unix_socket_addr>();
+    break;
+  case socket_addr::sock_domain::INET4:
+    connected_addr = std::make_unique<inet4_socket_addr>();
+    break;
+  case socket_addr::sock_domain::INET6:
+    connected_addr = std::make_unique<inet6_socket_addr>();
+    break;
+  default:
+    throw std::runtime_error{"this should be impossible..."};
+    break;
+  }
 
-    socklen_t connected_addr_len{connected_addr->size()};
+  socklen_t connected_addr_len{connected_addr->size()};
 
-    int new_sockfd{::accept(m_sockfd, connected_addr->socket_addr_ptr(),
-                            &connected_addr_len)};
+  int new_sockfd{::accept(m_sockfd, connected_addr->socket_addr_ptr(),
+                          &connected_addr_len)};
 
-    if (new_sockfd == -1) {
-      throw socket_error{"accept()", errno};
-    }
+  if (new_sockfd == -1) {
+    throw socket_error{"accept()", errno};
+  }
 
-    connected_stream_socket connected_stream_socket{new_sockfd, connected_addr.get()};
+  connected_stream_socket connected_stream_socket{new_sockfd,
+                                                  connected_addr.get()};
 
-    return connected_stream_socket;
+  return connected_stream_socket;
 }
 
 locket::server_stream_socket &

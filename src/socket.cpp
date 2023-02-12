@@ -4,7 +4,6 @@
 #include "inet_4_socket_addr.hpp"
 #include "inet_6_socket_addr.hpp"
 #include "inet_socket_addr.hpp"
-#include "socket.hpp"
 #include "socket_addr.hpp"
 #include "socket_error.hpp"
 #include "unix_socket_addr.hpp"
@@ -14,6 +13,7 @@
 
 #include <cerrno>
 #include <exception>
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -29,19 +29,17 @@ locket::socket::socket(int sockfd)
 }
 
 locket::socket::socket(socket &&other) noexcept
-    : m_sockfd{other.m_sockfd}, m_domain{std::move(other.m_domain)},
+    : m_sockfd{other.m_sockfd}, m_domain{other.m_domain},
       m_bound_addr{other.m_bound_addr} {
   other.m_sockfd = -1;
   other.m_bound_addr = nullptr;
 }
 
 locket::socket::~socket() {
-  if (m_bound_addr != nullptr) {
-    delete m_bound_addr;
-    m_bound_addr = nullptr;
-  }
+  delete m_bound_addr;
+  m_bound_addr = nullptr;
 
-  close();
+  close(false);
 }
 
 int locket::socket::get_sock_fd() { return m_sockfd; }
@@ -78,8 +76,8 @@ void locket::socket::bind(const socket_addr *bind_addr) {
   m_bound_addr = bind_addr->create_clone();
 }
 
-int locket::socket::create_clone() {
-  int new_sockfd{dup(m_sockfd)};
+int locket::socket::create_clone() const {
+  const int new_sockfd{dup(m_sockfd)};
 
   if (new_sockfd == -1) {
     throw socket_error{"dup()", errno};
@@ -105,7 +103,7 @@ locket::socket &locket::socket::operator=(socket &&other) noexcept {
   }
 
   m_sockfd = other.m_sockfd;
-  m_domain = std::move(other.m_domain);
+  m_domain = other.m_domain;
   m_bound_addr = other.m_bound_addr;
 
   other.m_sockfd = -1;
@@ -114,10 +112,15 @@ locket::socket &locket::socket::operator=(socket &&other) noexcept {
   return *this;
 }
 
-void locket::socket::close() {
+void locket::socket::close(bool throw_on_error /*= true*/) {
   if (m_sockfd != -1) {
     if (::close(m_sockfd) == -1) {
-      throw socket_error{"close()", errno};
+      if (throw_on_error == true) {
+        throw socket_error{"close()", errno};
+      } else {
+        std::cerr << "Error in function that was asked not to throw: "
+                  << socket_error{"close()", errno}.what();
+      }
     }
     m_sockfd = -1;
   }

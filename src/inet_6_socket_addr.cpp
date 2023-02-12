@@ -29,18 +29,19 @@ locket::inet6_socket_addr::inet6_socket_addr(in_port_t port) : m_addr{} {
 locket::inet6_socket_addr::inet6_socket_addr(in6_addr addr, in_port_t port)
     : m_addr{} {
   inet6_socket_addr::clear();
-  set_domain();
+  inet6_socket_addr::set_domain();
   init(addr, port);
 }
 
 locket::inet6_socket_addr::inet6_socket_addr(const std::string &saddr,
-                                             in_port_t port) {
-  clear();
-  set_domain();
+                                             in_port_t port)
+    : m_addr{} {
+  inet6_socket_addr::clear();
+  inet6_socket_addr::set_domain();
   init(saddr, port);
 }
 
-locket::inet6_socket_addr::inet6_socket_addr(const sockaddr *other) {
+locket::inet6_socket_addr::inet6_socket_addr(const sockaddr *other) : m_addr{} {
   if (other->sa_family != AF_INET6) {
     throw std::invalid_argument{"sockaddr is no an inet6 address"};
   }
@@ -48,7 +49,8 @@ locket::inet6_socket_addr::inet6_socket_addr(const sockaddr *other) {
   std::memcpy(&m_addr, other, m_k_size);
 }
 
-locket::inet6_socket_addr::inet6_socket_addr(const socket_addr *other) {
+locket::inet6_socket_addr::inet6_socket_addr(const socket_addr *other)
+    : m_addr{} {
   if (other->domain() != sock_domain::INET6) {
     throw std::invalid_argument{"socket_addr is not an inet6 address"};
   }
@@ -63,7 +65,7 @@ locket::inet6_socket_addr::inet6_socket_addr(const inet6_socket_addr &other)
     : m_addr{other.m_addr} {}
 
 locket::inet6_socket_addr::inet6_socket_addr(inet6_socket_addr &&other) noexcept
-    : m_addr{std::move(other.m_addr)} {}
+    : m_addr{other.m_addr} {}
 
 locket::inet6_socket_addr::~inet6_socket_addr() {}
 
@@ -92,8 +94,9 @@ bool locket::inet6_socket_addr::is_set() const {
 std::string locket::inet6_socket_addr::to_string() const {
   char address_buf[INET6_ADDRSTRLEN];
   std::string addr_str{};
-  addr_str.append(
-      inet_ntop(AF_INET6, &m_addr.sin6_addr, address_buf, INET6_ADDRSTRLEN));
+  addr_str.append(inet_ntop(AF_INET6, &m_addr.sin6_addr,
+                            static_cast<char *>(address_buf),
+                            INET6_ADDRSTRLEN));
   addr_str.append(":");
   addr_str.append(std::to_string(ntohs(m_addr.sin6_port)));
   return addr_str;
@@ -136,7 +139,7 @@ locket::inet6_socket_addr::operator=(inet6_socket_addr &&other) noexcept {
     return *this;
   }
 
-  m_addr = std::move(other.m_addr);
+  m_addr = other.m_addr;
 
   return *this;
 }
@@ -163,7 +166,8 @@ in6_addr locket::inet6_socket_addr::resolve_name(const std::string &saddr) {
   in6_addr resolved_address;
 
   try {
-    int getaddrinfo_result{getaddrinfo(saddr.c_str(), NULL, &hints, &result)};
+    const int getaddrinfo_result{
+        getaddrinfo(saddr.c_str(), nullptr, &hints, &result)};
     if (getaddrinfo_result != 0) {
       throw addrinfo_error{addrinfo_error::func::getaddrinfo,
                            getaddrinfo_result};

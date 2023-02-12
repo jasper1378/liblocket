@@ -10,16 +10,16 @@
 #include <stdexcept>
 #include <string>
 
-locket::unix_socket_addr::unix_socket_addr() : m_is_abstract{false} {
-  clear();
-  set_domain();
+locket::unix_socket_addr::unix_socket_addr() : m_addr{}, m_is_abstract{false} {
+  unix_socket_addr::clear();
+  unix_socket_addr::set_domain();
 }
 
 locket::unix_socket_addr::unix_socket_addr(const std::string &path_or_name,
                                            bool is_abstract /*= false*/)
-    : m_is_abstract{is_abstract} {
-  clear();
-  set_domain();
+    : m_addr{}, m_is_abstract{is_abstract} {
+  unix_socket_addr::clear();
+  unix_socket_addr::set_domain();
 
   if (is_abstract) {
     std::strncpy((&(m_addr.sun_path[1])), path_or_name.c_str(),
@@ -30,7 +30,8 @@ locket::unix_socket_addr::unix_socket_addr(const std::string &path_or_name,
   }
 }
 
-locket::unix_socket_addr::unix_socket_addr(const sockaddr *other) {
+locket::unix_socket_addr::unix_socket_addr(const sockaddr *other)
+    : m_addr{}, m_is_abstract{} {
   if (other->sa_family != AF_UNIX) {
     throw std::invalid_argument{"sockaddr is not a Unix address"};
   }
@@ -39,7 +40,8 @@ locket::unix_socket_addr::unix_socket_addr(const sockaddr *other) {
   m_is_abstract = check_if_abstract();
 }
 
-locket::unix_socket_addr::unix_socket_addr(const socket_addr *other) {
+locket::unix_socket_addr::unix_socket_addr(const socket_addr *other)
+    : m_addr{}, m_is_abstract{} {
   if (other->domain() != sock_domain::UNIX) {
     throw std::invalid_argument{"socket_addr is not a Unix address"};
   }
@@ -57,8 +59,7 @@ locket::unix_socket_addr::unix_socket_addr(const unix_socket_addr &other)
     : m_addr{other.m_addr}, m_is_abstract{other.m_is_abstract} {}
 
 locket::unix_socket_addr::unix_socket_addr(unix_socket_addr &&other) noexcept
-    : m_addr{std::move(other.m_addr)}, m_is_abstract{
-                                           std::move(other.m_is_abstract)} {}
+    : m_addr{other.m_addr}, m_is_abstract{other.m_is_abstract} {}
 
 locket::unix_socket_addr::~unix_socket_addr() {}
 
@@ -123,8 +124,8 @@ locket::unix_socket_addr::operator=(unix_socket_addr &&other) noexcept {
     return *this;
   }
 
-  m_addr = std::move(other.m_addr);
-  m_is_abstract = std::move(other.m_is_abstract);
+  m_addr = other.m_addr;
+  m_is_abstract = other.m_is_abstract;
 
   return *this;
 }

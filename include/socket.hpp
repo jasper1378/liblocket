@@ -51,7 +51,7 @@ public:
   socket_addr::sock_domain get_domain() const;
   virtual socket_addr *get_bound_addr() const;
   virtual void bind(const socket_addr *bind_addr);
-  int create_clone();
+  int create_clone() const;
   void shutdown(shutdown_how how);
 
   template <typename T>
@@ -80,7 +80,7 @@ public:
   socket &operator=(const socket &other) = delete;
 
 private:
-  void close();
+  void close(bool throw_on_error = true);
   virtual void init() = 0;
 };
 } // namespace locket

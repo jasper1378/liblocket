@@ -73,9 +73,7 @@ void locket::client_stream_socket::connect(const socket_addr *connect_addr) {
     throw socket_error{"connect()", errno};
   }
 
-  if (m_connected_addr != nullptr) {
-    delete m_connected_addr;
-  }
+  delete m_connected_addr;
 
   m_connected_addr = connect_addr->create_clone();
 }

@@ -21,13 +21,13 @@
 
 locket::stream_socket::stream_socket(socket_addr::sock_domain domain)
     : socket{domain} {
-  init();
+  stream_socket::init();
 }
 
 locket::stream_socket::stream_socket(socket::dummy_type_bind,
                                      const socket_addr *bound_addr)
     : socket{bound_addr->domain()} {
-  init();
+  stream_socket::init();
   bind(bound_addr);
 }
 
@@ -45,8 +45,9 @@ locket::stream_socket::~stream_socket() {}
 std::string locket::stream_socket::recv(int flags /*= 0*/) const {
   char message_buffer[m_k_max_message_length];
 
-  ssize_t bytes_recvd{
-      ::recv(m_sockfd, message_buffer, m_k_max_message_length, flags)};
+  const ssize_t bytes_recvd{::recv(m_sockfd,
+                                   static_cast<char *>(message_buffer),
+                                   m_k_max_message_length, flags)};
   if (bytes_recvd == -1) {
     throw socket_error{"recv()", errno};
   }
@@ -58,8 +59,9 @@ std::string locket::stream_socket::recv(int flags /*= 0*/) const {
 
 void locket::stream_socket::send(const std::string &message,
                                  int flags /*= 0*/) const {
-  size_t message_len{message.size() + 1};
-  ssize_t bytes_sent{::send(m_sockfd, message.c_str(), message_len, flags)};
+  const size_t message_len{message.size() + 1};
+  const ssize_t bytes_sent{
+      ::send(m_sockfd, message.c_str(), message_len, flags)};
   if (bytes_sent != static_cast<ssize_t>(message_len)) {
     throw socket_error{"send()", errno};
   }

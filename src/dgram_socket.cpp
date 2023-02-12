@@ -22,14 +22,14 @@
 
 locket::dgram_socket::dgram_socket(socket_addr::sock_domain domain)
     : socket{domain}, m_connected_addr{nullptr}, m_last_sender_addr{nullptr} {
-  init();
+  dgram_socket::init();
 }
 
 locket::dgram_socket::dgram_socket(socket::dummy_type_bind,
                                    const socket_addr *bound_addr)
     : socket{bound_addr->domain()}, m_connected_addr{nullptr},
       m_last_sender_addr{nullptr} {
-  init();
+  dgram_socket::init();
   bind(bound_addr);
 }
 
@@ -37,7 +37,7 @@ locket::dgram_socket::dgram_socket(socket::dummy_type_connect,
                                    const socket_addr *connected_addr)
     : socket{connected_addr->domain()}, m_connected_addr{nullptr},
       m_last_sender_addr{nullptr} {
-  init();
+  dgram_socket::init();
   connect(connected_addr);
 }
 
@@ -45,7 +45,7 @@ locket::dgram_socket::dgram_socket(const socket_addr *bound_addr,
                                    const socket_addr *connected_addr)
     : socket{bound_addr->domain()}, m_connected_addr{nullptr},
       m_last_sender_addr{nullptr} {
-  init();
+  dgram_socket::init();
   bind(bound_addr);
   connect(connected_addr);
 }
@@ -91,9 +91,7 @@ void locket::dgram_socket::connect(const socket_addr *connect_addr) {
     throw socket_error{"connect()", errno};
   }
 
-  if (m_connected_addr != nullptr) {
-    delete m_connected_addr;
-  }
+  delete m_connected_addr;
 
   m_connected_addr = connect_addr->create_clone();
 }
@@ -103,8 +101,8 @@ std::string locket::dgram_socket::recv(int flags /*= 0*/) const {
   ssize_t bytes_revcd{};
 
   if (m_connected_addr != nullptr) {
-    bytes_revcd =
-        ::recv(m_sockfd, message_buffer, m_k_max_message_length, flags);
+    bytes_revcd = ::recv(m_sockfd, static_cast<void *>(message_buffer),
+                         m_k_max_message_length, flags);
     if (bytes_revcd == -1) {
       throw socket_error{"recv()", errno};
     }
@@ -128,9 +126,9 @@ std::string locket::dgram_socket::recv(int flags /*= 0*/) const {
 
     socklen_t last_peer_addr_size{last_sender_addr->size()};
 
-    bytes_revcd =
-        recvfrom(m_sockfd, message_buffer, m_k_max_message_length, flags,
-                 last_sender_addr->socket_addr_ptr(), &last_peer_addr_size);
+    bytes_revcd = recvfrom(
+        m_sockfd, static_cast<void *>(message_buffer), m_k_max_message_length,
+        flags, last_sender_addr->socket_addr_ptr(), &last_peer_addr_size);
     if (bytes_revcd == -1) {
       throw socket_error{"recvfrom()", errno};
     }
@@ -167,7 +165,7 @@ void locket::dgram_socket::send(const std::string &message,
     }
   }
 
-  size_t message_len{message.size() + 1};
+  const size_t message_len{message.size() + 1};
   ssize_t bytes_sent{};
 
   if (m_connected_addr != nullptr) {

@@ -8,19 +8,18 @@
 #include <utility>
 
 locket::errno_error::errno_error(const std::string &what_arg, int errno_num)
-    : std::runtime_error{what_arg}, m_errno_num{errno_num}, m_errno_str{""} {}
+    : std::runtime_error{what_arg}, m_errno_num{errno_num}, m_errno_str{} {}
 
 locket::errno_error::errno_error(const char *what_arg, int errno_num)
-    : std::runtime_error{what_arg}, m_errno_num{errno_num}, m_errno_str{""} {}
+    : std::runtime_error{what_arg}, m_errno_num{errno_num}, m_errno_str{} {}
 
 locket::errno_error::errno_error(const errno_error &other) noexcept
     : std::runtime_error{other}, m_errno_num{other.m_errno_num},
       m_errno_str{other.m_errno_str} {}
 
 locket::errno_error::errno_error(errno_error &&other) noexcept
-    : std::runtime_error{std::move(other)},
-      m_errno_num{std::move(other.m_errno_num)}, m_errno_str{std::move(
-                                                     other.m_errno_str)} {}
+    : std::runtime_error{std::move(other)}, m_errno_num{other.m_errno_num},
+      m_errno_str{std::move(other.m_errno_str)} {}
 
 locket::errno_error::~errno_error() {}
 
@@ -31,7 +30,7 @@ const char *locket::errno_error::what() const noexcept {
 int locket::errno_error::get_errno() const noexcept { return m_errno_num; }
 
 std::string locket::errno_error::get_errno_string() const noexcept {
-  if (m_errno_str == "") {
+  if (m_errno_str.empty() == true) {
     m_errno_str = errno_to_string(m_errno_num);
   }
 
@@ -57,7 +56,7 @@ locket::errno_error::operator=(errno_error &&other) noexcept {
     return *this;
   }
 
-  m_errno_num = std::move(other.m_errno_num);
+  m_errno_num = other.m_errno_num;
   m_errno_str = std::move(other.m_errno_str);
   std::runtime_error::operator=(std::move(other));
 
@@ -65,5 +64,13 @@ locket::errno_error::operator=(errno_error &&other) noexcept {
 }
 
 std::string locket::errno_error::errno_to_string(int errno_num) const {
-  return std::string{std::strerror(errno_num)};
+  return strerror_threadsafe(errno_num);
+}
+
+#define _GNU_SOURCE 1
+std::string locket::errno_error::strerror_threadsafe(int errno_num) {
+  constexpr size_t buf_size{256};
+  char buf[buf_size];
+
+  return std::string{strerror_r(errno_num, static_cast<char *>(buf), buf_size)};
 }

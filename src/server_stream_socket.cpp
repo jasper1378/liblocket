@@ -49,8 +49,7 @@ locket::server_stream_socket::server_stream_socket(int sockfd)
 
 locket::server_stream_socket::server_stream_socket(
     server_stream_socket &&other) noexcept
-    : stream_socket{std::move(other)}, m_is_listening{
-                                           std::move(other.m_is_listening)} {}
+    : stream_socket{std::move(other)}, m_is_listening{other.m_is_listening} {}
 
 locket::server_stream_socket::~server_stream_socket() {}
 
@@ -92,8 +91,8 @@ locket::connected_stream_socket locket::server_stream_socket::accept() const {
 
   socklen_t connected_addr_len{connected_addr->size()};
 
-  int new_sockfd{::accept(m_sockfd, connected_addr->socket_addr_ptr(),
-                          &connected_addr_len)};
+  const int new_sockfd{::accept(m_sockfd, connected_addr->socket_addr_ptr(),
+                                &connected_addr_len)};
 
   if (new_sockfd == -1) {
     throw socket_error{"accept()", errno};
@@ -111,7 +110,7 @@ locket::server_stream_socket::operator=(server_stream_socket &&other) noexcept {
     return *this;
   }
 
-  m_is_listening = std::move(other.m_is_listening);
+  m_is_listening = other.m_is_listening;
 
   stream_socket::operator=(std::move(other));
 

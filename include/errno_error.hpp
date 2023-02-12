@@ -10,9 +10,19 @@
 
 namespace locket {
 class errno_error : public std::runtime_error {
+protected:
+  using conversion_func = std::string (*)(int);
+
+public:
+  static std::string strerror_threadsafe(int errno_num);
+
 private:
   int m_errno_num;
-  mutable std::string m_errno_str;
+  std::string m_errno_str;
+
+private:
+  static constexpr conversion_func m_k_default_errno_to_string{
+      &strerror_threadsafe};
 
 public:
   errno_error(const std::string &what_arg, int errno_num);
@@ -22,6 +32,12 @@ public:
 
   virtual ~errno_error();
 
+protected:
+  errno_error(const std::string &what_arg, int errno_num,
+              conversion_func errno_to_string);
+  errno_error(const char *what_arg, int errno_num,
+              conversion_func errno_to_string);
+
 public:
   virtual const char *what() const noexcept;
   virtual int get_errno() const noexcept;
@@ -30,12 +46,6 @@ public:
 public:
   errno_error &operator=(const errno_error &other) noexcept;
   errno_error &operator=(errno_error &&other) noexcept;
-
-protected:
-  virtual std::string errno_to_string(int errno_num) const;
-
-public:
-  static std::string strerror_threadsafe(int errno_num);
 };
 } // namespace locket
 

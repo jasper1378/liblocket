@@ -12,8 +12,12 @@
 #include <string>
 #include <utility>
 
+std::string locket::addrinfo_error::gai_strerror_wrapper(int errno_num) {
+  return std::string{gai_strerror(errno_num)};
+}
+
 locket::addrinfo_error::addrinfo_error(func function, int errno_num)
-    : socket_error{func_to_string(function), errno_num} {}
+    : addrinfo_error{function, errno_num, nullptr} {}
 
 locket::addrinfo_error::addrinfo_error(const addrinfo_error &other) noexcept
     : socket_error{other} {}
@@ -22,6 +26,13 @@ locket::addrinfo_error::addrinfo_error(addrinfo_error &&other) noexcept
     : socket_error{std::move(other)} {}
 
 locket::addrinfo_error::~addrinfo_error() {}
+
+locket::addrinfo_error::addrinfo_error(func function, int errno_num,
+                                       conversion_func errno_to_string)
+    : socket_error{func_to_string(function), errno_num,
+                   ((errno_to_string != nullptr)
+                        ? (errno_to_string)
+                        : (m_k_default_errno_to_string))} {}
 
 const char *locket::addrinfo_error::what() const noexcept {
   return socket_error::what();
@@ -57,20 +68,9 @@ locket::addrinfo_error::operator=(addrinfo_error &&other) noexcept {
   return *this;
 }
 
-std::string locket::addrinfo_error::errno_to_string(int errno_num) const {
-  return std::string{gai_strerror(errno_num)};
-}
-
 std::string locket::addrinfo_error::func_to_string(func function) {
-  switch (function) {
-  case func::getaddrinfo:
-    return "getaddrinfo()";
-    break;
-  case func::getnameinfo:
-    return "getnameinfo()";
-    break;
-  default:
-    return "this should be impossible...";
-    break;
-  }
+  static constexpr const char *func_name_lut[]{"getaddrinfo()",
+                                               "getnameinfo()"};
+
+  return func_name_lut[static_cast<int>(function)];
 }

@@ -15,19 +15,20 @@
 #include <stdexcept>
 #include <string>
 
-locket::inet6_socket_addr::inet6_socket_addr() {
-  clear();
-  set_domain();
+locket::inet6_socket_addr::inet6_socket_addr() : m_addr{} {
+  inet6_socket_addr::clear();
+  inet6_socket_addr::set_domain();
 }
 
-locket::inet6_socket_addr::inet6_socket_addr(in_port_t port) {
-  clear();
-  set_domain();
+locket::inet6_socket_addr::inet6_socket_addr(in_port_t port) : m_addr{} {
+  inet6_socket_addr::clear();
+  inet6_socket_addr::set_domain();
   init(in6addr_any, port);
 }
 
-locket::inet6_socket_addr::inet6_socket_addr(in6_addr addr, in_port_t port) {
-  clear();
+locket::inet6_socket_addr::inet6_socket_addr(in6_addr addr, in_port_t port)
+    : m_addr{} {
+  inet6_socket_addr::clear();
   set_domain();
   init(addr, port);
 }

@@ -33,6 +33,9 @@ public:
 
 protected:
   virtual std::string errno_to_string(int errno_num) const;
+
+public:
+  static std::string strerror_threadsafe(int errno_num);
 };
 } // namespace locket
 

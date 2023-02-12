@@ -22,7 +22,7 @@ public:
   addrinfo_error(const addrinfo_error &other) noexcept;
   addrinfo_error(addrinfo_error &&other) noexcept;
 
-  virtual ~addrinfo_error();
+  virtual ~addrinfo_error() override;
 
 public:
   virtual const char *what() const noexcept override;

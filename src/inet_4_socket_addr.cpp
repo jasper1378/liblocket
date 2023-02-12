@@ -15,31 +15,33 @@
 #include <stdexcept>
 #include <string>
 
-locket::inet4_socket_addr::inet4_socket_addr() {
-  clear();
-  set_domain();
+locket::inet4_socket_addr::inet4_socket_addr() : m_addr{} {
+  inet4_socket_addr::clear();
+  inet4_socket_addr::set_domain();
 }
 
-locket::inet4_socket_addr::inet4_socket_addr(in_port_t port) {
-  clear();
-  set_domain();
+locket::inet4_socket_addr::inet4_socket_addr(in_port_t port) : m_addr{} {
+  inet4_socket_addr::clear();
+  inet4_socket_addr::set_domain();
   init(in_addr{INADDR_ANY}, port);
 }
 
-locket::inet4_socket_addr::inet4_socket_addr(in_addr addr, in_port_t port) {
-  clear();
-  set_domain();
+locket::inet4_socket_addr::inet4_socket_addr(in_addr addr, in_port_t port)
+    : m_addr{} {
+  inet4_socket_addr::clear();
+  inet4_socket_addr::set_domain();
   init(addr, port);
 }
 
 locket::inet4_socket_addr::inet4_socket_addr(const std::string &saddr,
-                                             in_port_t port) {
-  clear();
-  set_domain();
+                                             in_port_t port)
+    : m_addr{} {
+  inet4_socket_addr::clear();
+  inet4_socket_addr::set_domain();
   init(saddr, port);
 }
 
-locket::inet4_socket_addr::inet4_socket_addr(const sockaddr *other) {
+locket::inet4_socket_addr::inet4_socket_addr(const sockaddr *other) : m_addr{} {
   if (other->sa_family != AF_INET) {
     throw std::invalid_argument{"sockaddr is not an inet address"};
   }
@@ -47,7 +49,8 @@ locket::inet4_socket_addr::inet4_socket_addr(const sockaddr *other) {
   std::memcpy(&m_addr, other, m_k_size);
 }
 
-locket::inet4_socket_addr::inet4_socket_addr(const socket_addr *other) {
+locket::inet4_socket_addr::inet4_socket_addr(const socket_addr *other)
+    : m_addr{} {
   if (other->domain() != sock_domain::INET4) {
     throw std::invalid_argument{"socket_addr is not an inet address"};
   }
@@ -62,7 +65,7 @@ locket::inet4_socket_addr::inet4_socket_addr(const inet4_socket_addr &other)
     : m_addr{other.m_addr} {}
 
 locket::inet4_socket_addr::inet4_socket_addr(inet4_socket_addr &&other) noexcept
-    : m_addr{std::move(other.m_addr)} {}
+    : m_addr{other.m_addr} {}
 
 locket::inet4_socket_addr::~inet4_socket_addr() {}
 
@@ -91,8 +94,8 @@ bool locket::inet4_socket_addr::is_set() const {
 std::string locket::inet4_socket_addr::to_string() const {
   char address_buf[INET_ADDRSTRLEN];
   std::string addr_str{};
-  addr_str.append(
-      inet_ntop(AF_INET, &m_addr.sin_addr, address_buf, INET_ADDRSTRLEN));
+  addr_str.append(inet_ntop(AF_INET, &m_addr.sin_addr,
+                            static_cast<char *>(address_buf), INET_ADDRSTRLEN));
   addr_str.append(":");
   addr_str.append(std::to_string(ntohs(m_addr.sin_port)));
   return addr_str;
@@ -135,7 +138,7 @@ locket::inet4_socket_addr::operator=(inet4_socket_addr &&other) noexcept {
     return *this;
   }
 
-  m_addr = std::move(other.m_addr);
+  m_addr = other.m_addr;
 
   return *this;
 }
@@ -163,7 +166,8 @@ in_addr locket::inet4_socket_addr::resolve_name(
   in_addr resolved_address;
 
   try {
-    int getaddrinfo_result{getaddrinfo(saddr.c_str(), NULL, &hints, &result)};
+    const int getaddrinfo_result{
+        getaddrinfo(saddr.c_str(), nullptr, &hints, &result)};
     if (getaddrinfo_result != 0) {
       throw addrinfo_error{addrinfo_error::func::getaddrinfo,
                            getaddrinfo_result};

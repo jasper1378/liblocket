@@ -51,10 +51,6 @@ std::string locket::socket_error::get_errno_string() const noexcept {
 
 locket::socket_error &
 locket::socket_error::operator=(const socket_error &other) noexcept {
-  if (this == &other) {
-    return *this;
-  }
-
   errno_error::operator=(other);
 
   return *this;
@@ -62,10 +58,6 @@ locket::socket_error::operator=(const socket_error &other) noexcept {
 
 locket::socket_error &
 locket::socket_error::operator=(socket_error &&other) noexcept {
-  if (this == &other) {
-    return *this;
-  }
-
   errno_error::operator=(std::move(other));
 
   return *this;

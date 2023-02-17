@@ -124,10 +124,6 @@ in6_addr locket::inet6_socket_addr::address() const { return m_addr.sin6_addr; }
 
 locket::inet6_socket_addr &
 locket::inet6_socket_addr::operator=(const inet6_socket_addr &other) {
-  if (this == &other) {
-    return *this;
-  }
-
   m_addr = other.m_addr;
 
   return *this;
@@ -135,10 +131,6 @@ locket::inet6_socket_addr::operator=(const inet6_socket_addr &other) {
 
 locket::inet6_socket_addr &
 locket::inet6_socket_addr::operator=(inet6_socket_addr &&other) noexcept {
-  if (this == &other) {
-    return *this;
-  }
-
   m_addr = other.m_addr;
 
   return *this;

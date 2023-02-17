@@ -106,10 +106,6 @@ locket::connected_stream_socket locket::server_stream_socket::accept() const {
 
 locket::server_stream_socket &
 locket::server_stream_socket::operator=(server_stream_socket &&other) noexcept {
-  if (this == &other) {
-    return *this;
-  }
-
   m_is_listening = other.m_is_listening;
 
   stream_socket::operator=(std::move(other));

@@ -108,10 +108,6 @@ bool locket::unix_socket_addr::is_abstract() const { return m_is_abstract; }
 
 locket::unix_socket_addr &
 locket::unix_socket_addr::operator=(const unix_socket_addr &other) {
-  if (this == &other) {
-    return *this;
-  }
-
   m_addr = other.m_addr;
   m_is_abstract = other.m_is_abstract;
 
@@ -120,10 +116,6 @@ locket::unix_socket_addr::operator=(const unix_socket_addr &other) {
 
 locket::unix_socket_addr &
 locket::unix_socket_addr::operator=(unix_socket_addr &&other) noexcept {
-  if (this == &other) {
-    return *this;
-  }
-
   m_addr = other.m_addr;
   m_is_abstract = other.m_is_abstract;
 

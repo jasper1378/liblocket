@@ -62,10 +62,6 @@ std::string locket::errno_error::get_errno_string() const noexcept {
 
 locket::errno_error &
 locket::errno_error::operator=(const errno_error &other) noexcept {
-  if (this == &other) {
-    return *this;
-  }
-
   m_errno_num = other.m_errno_num;
   m_errno_str = other.m_errno_str;
   std::runtime_error::operator=(other);
@@ -75,10 +71,6 @@ locket::errno_error::operator=(const errno_error &other) noexcept {
 
 locket::errno_error &
 locket::errno_error::operator=(errno_error &&other) noexcept {
-  if (this == &other) {
-    return *this;
-  }
-
   m_errno_num = other.m_errno_num;
   m_errno_str = std::move(other.m_errno_str);
   std::runtime_error::operator=(std::move(other));

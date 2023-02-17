@@ -48,10 +48,6 @@ std::string locket::addrinfo_error::get_errno_string() const noexcept {
 
 locket::addrinfo_error &
 locket::addrinfo_error::operator=(const addrinfo_error &other) noexcept {
-  if (this == &other) {
-    return *this;
-  }
-
   socket_error::operator=(other);
 
   return *this;
@@ -59,10 +55,6 @@ locket::addrinfo_error::operator=(const addrinfo_error &other) noexcept {
 
 locket::addrinfo_error &
 locket::addrinfo_error::operator=(addrinfo_error &&other) noexcept {
-  if (this == &other) {
-    return *this;
-  }
-
   socket_error::operator=(std::move(other));
 
   return *this;

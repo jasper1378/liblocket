@@ -37,10 +37,8 @@ locket::connected_stream_socket::connected_stream_socket(
 }
 
 locket::connected_stream_socket::~connected_stream_socket() {
-  if (m_connected_addr != nullptr) {
-    delete m_connected_addr;
-    m_connected_addr = nullptr;
-  }
+  delete m_connected_addr;
+  m_connected_addr = nullptr;
 }
 
 std::string locket::connected_stream_socket::recv(int flags /*= 0*/) const {
@@ -58,10 +56,8 @@ locket::connected_stream_socket &locket::connected_stream_socket::operator=(
     return *this;
   }
 
-  if (m_connected_addr != nullptr) {
-    delete m_connected_addr;
-    m_connected_addr = nullptr;
-  }
+  delete m_connected_addr;
+  m_connected_addr = nullptr;
 
   m_connected_addr = other.m_connected_addr;
 

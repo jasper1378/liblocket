@@ -65,15 +65,11 @@ locket::dgram_socket::dgram_socket(dgram_socket &&other) noexcept
 }
 
 locket::dgram_socket::~dgram_socket() {
-  if (m_connected_addr != nullptr) {
-    delete m_connected_addr;
-    m_connected_addr = nullptr;
-  }
+  delete m_connected_addr;
+  m_connected_addr = nullptr;
 
-  if (m_last_sender_addr != nullptr) {
-    delete m_last_sender_addr;
-    m_last_sender_addr = nullptr;
-  }
+  delete m_last_sender_addr;
+  m_last_sender_addr = nullptr;
 }
 
 void locket::dgram_socket::connect(const socket_addr *connect_addr) {
@@ -135,10 +131,8 @@ std::string locket::dgram_socket::recv(int flags /*= 0*/) const {
 
     message_buffer[bytes_revcd] = '\0';
 
-    if (m_last_sender_addr != nullptr) {
-      delete m_last_sender_addr;
-      m_last_sender_addr = nullptr;
-    }
+    delete m_last_sender_addr;
+    m_last_sender_addr = nullptr;
 
     m_last_sender_addr = last_sender_addr.release();
   }
@@ -204,15 +198,11 @@ locket::dgram_socket::operator=(dgram_socket &&other) noexcept {
     return *this;
   }
 
-  if (m_last_sender_addr != nullptr) {
-    delete m_last_sender_addr;
-    m_last_sender_addr = nullptr;
-  }
+  delete m_last_sender_addr;
+  m_last_sender_addr = nullptr;
 
-  if (m_connected_addr != nullptr) {
-    delete m_connected_addr;
-    m_connected_addr = nullptr;
-  }
+  delete m_connected_addr;
+  m_connected_addr = nullptr;
 
   m_connected_addr = other.m_connected_addr;
   m_last_sender_addr = other.m_last_sender_addr;

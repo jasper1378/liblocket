@@ -69,10 +69,8 @@ void locket::socket::bind(const socket_addr *bind_addr) {
     throw socket_error{"bind()", errno};
   }
 
-  if (m_bound_addr != nullptr) {
-    delete m_bound_addr;
-    m_bound_addr = nullptr;
-  }
+  delete m_bound_addr;
+  m_bound_addr = nullptr;
   m_bound_addr = bind_addr->create_clone();
 }
 
@@ -97,10 +95,8 @@ locket::socket &locket::socket::operator=(socket &&other) noexcept {
     return *this;
   }
 
-  if (m_bound_addr != nullptr) {
-    delete m_bound_addr;
-    m_bound_addr = nullptr;
-  }
+  delete m_bound_addr;
+  m_bound_addr = nullptr;
 
   m_sockfd = other.m_sockfd;
   m_domain = other.m_domain;

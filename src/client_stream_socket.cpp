@@ -52,10 +52,8 @@ locket::client_stream_socket::client_stream_socket(
 }
 
 locket::client_stream_socket::~client_stream_socket() {
-  if (m_connected_addr != nullptr) {
-    delete m_connected_addr;
-    m_connected_addr = nullptr;
-  }
+  delete m_connected_addr;
+  m_connected_addr = nullptr;
 }
 
 void locket::client_stream_socket::connect(const socket_addr *connect_addr) {
@@ -101,10 +99,8 @@ locket::client_stream_socket::operator=(client_stream_socket &&other) noexcept {
     return *this;
   }
 
-  if (m_connected_addr != nullptr) {
-    delete m_connected_addr;
-    m_connected_addr = nullptr;
-  }
+  delete m_connected_addr;
+  m_connected_addr = nullptr;
 
   m_connected_addr = other.m_connected_addr;
 

@@ -1,5 +1,5 @@
-#ifndef LOCKET_SOCKET_HPP
-#define LOCKET_SOCKET_HPP
+#ifndef LIBLOCKET_SOCKET_HPP
+#define LIBLOCKET_SOCKET_HPP
 
 #include "inet_4_socket_addr.hpp"
 #include "inet_6_socket_addr.hpp"
@@ -14,7 +14,7 @@
 #include <cstddef>
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class socket {
 public:
   struct dummy_type_bind {};
@@ -83,6 +83,6 @@ private:
   void close(bool throw_on_error = true);
   virtual void init() = 0;
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

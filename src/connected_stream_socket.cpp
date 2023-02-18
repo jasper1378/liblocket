@@ -19,7 +19,7 @@
 #include <string>
 #include <utility>
 
-locket::connected_stream_socket::connected_stream_socket(
+liblocket::connected_stream_socket::connected_stream_socket(
     int sockfd, const socket_addr *connected_addr)
     : stream_socket{sockfd}, m_connected_addr{nullptr} {
   if (connected_addr == nullptr) {
@@ -29,28 +29,28 @@ locket::connected_stream_socket::connected_stream_socket(
   m_connected_addr = connected_addr->create_clone();
 }
 
-locket::connected_stream_socket::connected_stream_socket(
+liblocket::connected_stream_socket::connected_stream_socket(
     connected_stream_socket &&other) noexcept
     : stream_socket{std::move(other)}, m_connected_addr{
                                            other.m_connected_addr} {
   other.m_connected_addr = nullptr;
 }
 
-locket::connected_stream_socket::~connected_stream_socket() {
+liblocket::connected_stream_socket::~connected_stream_socket() {
   delete m_connected_addr;
   m_connected_addr = nullptr;
 }
 
-std::string locket::connected_stream_socket::recv(int flags /*= 0*/) const {
+std::string liblocket::connected_stream_socket::recv(int flags /*= 0*/) const {
   return stream_socket::recv(flags);
 }
 
-void locket::connected_stream_socket::send(const std::string &message,
+void liblocket::connected_stream_socket::send(const std::string &message,
                                            int flags /*= 0*/) const {
   stream_socket::send(message, flags);
 }
 
-locket::connected_stream_socket &locket::connected_stream_socket::operator=(
+liblocket::connected_stream_socket &liblocket::connected_stream_socket::operator=(
     connected_stream_socket &&other) noexcept {
   if (this == &other) {
     return *this;
@@ -68,7 +68,7 @@ locket::connected_stream_socket &locket::connected_stream_socket::operator=(
   return *this;
 }
 
-locket::socket_addr *locket::connected_stream_socket::get_bound_addr() const {
+liblocket::socket_addr *liblocket::connected_stream_socket::get_bound_addr() const {
   throw std::runtime_error{
       "connected_stream_sockets can not be bound. Yes, I'm well aware that "
       "this violates the principle of having a common interface for all "
@@ -76,7 +76,7 @@ locket::socket_addr *locket::connected_stream_socket::get_bound_addr() const {
   return nullptr;
 }
 
-void locket::connected_stream_socket::bind(__attribute__((unused))
+void liblocket::connected_stream_socket::bind(__attribute__((unused))
                                            const socket_addr *bound_addr) {
   throw std::runtime_error{
       "connected_stream_sockets can not be bound. Yes, I'm well aware that "

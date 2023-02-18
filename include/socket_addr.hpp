@@ -1,11 +1,11 @@
-#ifndef LOCKET_SOCKET_ADDR_HPP
-#define LOCKET_SOCKET_ADDR_HPP
+#ifndef LIBLOCKET_SOCKET_ADDR_HPP
+#define LIBLOCKET_SOCKET_ADDR_HPP
 
 #include <sys/socket.h>
 
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class socket_addr {
 public:
   enum class sock_domain {
@@ -32,6 +32,6 @@ protected:
   virtual void clear() = 0;
   virtual void set_domain() = 0;
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

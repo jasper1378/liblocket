@@ -1,7 +1,7 @@
 # Remember:
 # GNU make is a picky little bugger who doesn't like spaces in his file paths
 
-LIB_NAME := locket
+LIB_NAME := liblocket
 CXX := g++
 COMPILE_FLAGS := -fPIC -std=c++17 -Wall -Wextra -g
 RELEASE_COMPILE_FLAGS := -O2
@@ -14,8 +14,8 @@ INCLUDE_DIR := ./include
 LIBRARIES :=
 INSTALL_PATH := /usr/local
 
-STATIC_LIB_NAME := lib$(LIB_NAME).a
-SHARED_LIB_NAME := lib$(LIB_NAME).so
+STATIC_LIB_NAME := $(LIB_NAME).a
+SHARED_LIB_NAME := $(LIB_NAME).so
 LIB_INSTALL_PATH := $(INSTALL_PATH)/lib
 HEADER_INSTALL_PATH := $(INSTALL_PATH)/include
 

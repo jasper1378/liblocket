@@ -1,5 +1,5 @@
-#ifndef LOCKET_STREAM_SOCKET_HPP
-#define LOCKET_STREAM_SOCKET_HPP
+#ifndef LIBLOCKET_STREAM_SOCKET_HPP
+#define LIBLOCKET_STREAM_SOCKET_HPP
 
 #include "inet_4_socket_addr.hpp"
 #include "inet_6_socket_addr.hpp"
@@ -12,7 +12,7 @@
 
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class stream_socket : public socket {
 protected:
   explicit stream_socket(socket_addr::sock_domain domain);
@@ -35,6 +35,6 @@ protected:
   virtual std::string recv(int flags = 0) const;
   virtual void send(const std::string &message, int flags = 0) const;
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

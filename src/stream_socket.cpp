@@ -19,30 +19,30 @@
 #include <string>
 #include <utility>
 
-locket::stream_socket::stream_socket(socket_addr::sock_domain domain)
+liblocket::stream_socket::stream_socket(socket_addr::sock_domain domain)
     : socket{domain} {
   stream_socket::init();
 }
 
-locket::stream_socket::stream_socket(socket::dummy_type_bind,
+liblocket::stream_socket::stream_socket(socket::dummy_type_bind,
                                      const socket_addr *bound_addr)
     : socket{bound_addr->domain()} {
   stream_socket::init();
   bind(bound_addr);
 }
 
-locket::stream_socket::stream_socket(int sockfd) : socket{sockfd} {
+liblocket::stream_socket::stream_socket(int sockfd) : socket{sockfd} {
   if (get_socket_option<int>(SO_TYPE) != SOCK_STREAM) {
     throw std::runtime_error{"socket is not a stream socket"};
   }
 }
 
-locket::stream_socket::stream_socket(stream_socket &&other) noexcept
+liblocket::stream_socket::stream_socket(stream_socket &&other) noexcept
     : socket{std::move(other)} {}
 
-locket::stream_socket::~stream_socket() {}
+liblocket::stream_socket::~stream_socket() {}
 
-std::string locket::stream_socket::recv(int flags /*= 0*/) const {
+std::string liblocket::stream_socket::recv(int flags /*= 0*/) const {
   char message_buffer[m_k_max_message_length];
 
   const ssize_t bytes_recvd{::recv(m_sockfd,
@@ -57,7 +57,7 @@ std::string locket::stream_socket::recv(int flags /*= 0*/) const {
   return std::string{message_buffer};
 }
 
-void locket::stream_socket::send(const std::string &message,
+void liblocket::stream_socket::send(const std::string &message,
                                  int flags /*= 0*/) const {
   const size_t message_len{message.size() + 1};
   const ssize_t bytes_sent{
@@ -67,14 +67,14 @@ void locket::stream_socket::send(const std::string &message,
   }
 }
 
-locket::stream_socket &
-locket::stream_socket::operator=(stream_socket &&other) noexcept {
+liblocket::stream_socket &
+liblocket::stream_socket::operator=(stream_socket &&other) noexcept {
   socket::operator=(std::move(other));
 
   return *this;
 }
 
-void locket::stream_socket::init() {
+void liblocket::stream_socket::init() {
   if (m_sockfd != -1) {
     throw std::runtime_error{"socket has already been initialized"};
   }

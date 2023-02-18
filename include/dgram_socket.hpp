@@ -1,5 +1,5 @@
-#ifndef LOCKET_DGRAM_SOCKET_HPP
-#define LOCKET_DGRAM_SOCKET_HPP
+#ifndef LIBLOCKET_DGRAM_SOCKET_HPP
+#define LIBLOCKET_DGRAM_SOCKET_HPP
 
 #include "inet_4_socket_addr.hpp"
 #include "inet_6_socket_addr.hpp"
@@ -12,7 +12,7 @@
 
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class dgram_socket : public socket {
 private:
   socket_addr *m_connected_addr;
@@ -47,6 +47,6 @@ public:
 private:
   void init() override;
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

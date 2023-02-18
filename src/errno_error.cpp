@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <utility>
 
-std::string locket::errno_error::strerror_threadsafe(int errno_num) {
+std::string liblocket::errno_error::strerror_threadsafe(int errno_num) {
   constexpr size_t buf_size{256};
   char buf[buf_size];
 
@@ -20,48 +20,48 @@ std::string locket::errno_error::strerror_threadsafe(int errno_num) {
   return std::string{strerror_r(errno_num, static_cast<char *>(buf), buf_size)};
 }
 
-locket::errno_error::errno_error(const std::string &what_arg, int errno_num)
+liblocket::errno_error::errno_error(const std::string &what_arg, int errno_num)
     : errno_error{what_arg, errno_num, nullptr} {}
 
-locket::errno_error::errno_error(const char *what_arg, int errno_num)
+liblocket::errno_error::errno_error(const char *what_arg, int errno_num)
     : errno_error{what_arg, errno_num, nullptr} {}
 
-locket::errno_error::errno_error(const errno_error &other) noexcept
+liblocket::errno_error::errno_error(const errno_error &other) noexcept
     : std::runtime_error{other}, m_errno_num{other.m_errno_num},
       m_errno_str{other.m_errno_str} {}
 
-locket::errno_error::errno_error(errno_error &&other) noexcept
+liblocket::errno_error::errno_error(errno_error &&other) noexcept
     : std::runtime_error{std::move(other)}, m_errno_num{other.m_errno_num},
       m_errno_str{std::move(other.m_errno_str)} {}
 
-locket::errno_error::~errno_error() {}
+liblocket::errno_error::~errno_error() {}
 
-locket::errno_error::errno_error(const std::string &what_arg, int errno_num,
+liblocket::errno_error::errno_error(const std::string &what_arg, int errno_num,
                                  conversion_func errno_to_string)
     : std::runtime_error{what_arg}, m_errno_num{errno_num},
       m_errno_str{((errno_to_string != nullptr)
                        ? (errno_to_string(errno_num))
                        : (m_k_default_errno_to_string(errno_num)))} {}
 
-locket::errno_error::errno_error(const char *what_arg, int errno_num,
+liblocket::errno_error::errno_error(const char *what_arg, int errno_num,
                                  conversion_func errno_to_string)
     : std::runtime_error{what_arg}, m_errno_num{errno_num},
       m_errno_str{((errno_to_string != nullptr)
                        ? (errno_to_string(errno_num))
                        : (m_k_default_errno_to_string(errno_num)))} {}
 
-const char *locket::errno_error::what() const noexcept {
+const char *liblocket::errno_error::what() const noexcept {
   return std::runtime_error::what();
 }
 
-int locket::errno_error::get_errno() const noexcept { return m_errno_num; }
+int liblocket::errno_error::get_errno() const noexcept { return m_errno_num; }
 
-std::string locket::errno_error::get_errno_string() const noexcept {
+std::string liblocket::errno_error::get_errno_string() const noexcept {
   return m_errno_str;
 }
 
-locket::errno_error &
-locket::errno_error::operator=(const errno_error &other) noexcept {
+liblocket::errno_error &
+liblocket::errno_error::operator=(const errno_error &other) noexcept {
   m_errno_num = other.m_errno_num;
   m_errno_str = other.m_errno_str;
   std::runtime_error::operator=(other);
@@ -69,8 +69,8 @@ locket::errno_error::operator=(const errno_error &other) noexcept {
   return *this;
 }
 
-locket::errno_error &
-locket::errno_error::operator=(errno_error &&other) noexcept {
+liblocket::errno_error &
+liblocket::errno_error::operator=(errno_error &&other) noexcept {
   m_errno_num = other.m_errno_num;
   m_errno_str = std::move(other.m_errno_str);
   std::runtime_error::operator=(std::move(other));

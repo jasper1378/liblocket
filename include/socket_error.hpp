@@ -1,5 +1,5 @@
-#ifndef LOCKET_SOCKET_ERROR_HPP
-#define LOCKET_SOCKET_ERROR_HPP
+#ifndef LIBLOCKET_SOCKET_ERROR_HPP
+#define LIBLOCKET_SOCKET_ERROR_HPP
 
 #include "errno_error.hpp"
 
@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class socket_error : public errno_error {
 private:
   static constexpr conversion_func m_k_default_errno_to_string{
@@ -39,6 +39,6 @@ public:
   socket_error &operator=(const socket_error &other) noexcept;
   socket_error &operator=(socket_error &&other) noexcept;
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

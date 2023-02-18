@@ -20,12 +20,12 @@
 #include <string>
 #include <utility>
 
-locket::dgram_socket::dgram_socket(socket_addr::sock_domain domain)
+liblocket::dgram_socket::dgram_socket(socket_addr::sock_domain domain)
     : socket{domain}, m_connected_addr{nullptr}, m_last_sender_addr{nullptr} {
   dgram_socket::init();
 }
 
-locket::dgram_socket::dgram_socket(socket::dummy_type_bind,
+liblocket::dgram_socket::dgram_socket(socket::dummy_type_bind,
                                    const socket_addr *bound_addr)
     : socket{bound_addr->domain()}, m_connected_addr{nullptr},
       m_last_sender_addr{nullptr} {
@@ -33,7 +33,7 @@ locket::dgram_socket::dgram_socket(socket::dummy_type_bind,
   bind(bound_addr);
 }
 
-locket::dgram_socket::dgram_socket(socket::dummy_type_connect,
+liblocket::dgram_socket::dgram_socket(socket::dummy_type_connect,
                                    const socket_addr *connected_addr)
     : socket{connected_addr->domain()}, m_connected_addr{nullptr},
       m_last_sender_addr{nullptr} {
@@ -41,7 +41,7 @@ locket::dgram_socket::dgram_socket(socket::dummy_type_connect,
   connect(connected_addr);
 }
 
-locket::dgram_socket::dgram_socket(const socket_addr *bound_addr,
+liblocket::dgram_socket::dgram_socket(const socket_addr *bound_addr,
                                    const socket_addr *connected_addr)
     : socket{bound_addr->domain()}, m_connected_addr{nullptr},
       m_last_sender_addr{nullptr} {
@@ -50,21 +50,21 @@ locket::dgram_socket::dgram_socket(const socket_addr *bound_addr,
   connect(connected_addr);
 }
 
-locket::dgram_socket::dgram_socket(int sockfd)
+liblocket::dgram_socket::dgram_socket(int sockfd)
     : socket{sockfd}, m_connected_addr{nullptr}, m_last_sender_addr{nullptr} {
   if (get_socket_option<int>(SO_TYPE) != SOCK_DGRAM) {
     throw std::runtime_error{"socket is not a datagram socket"};
   }
 }
 
-locket::dgram_socket::dgram_socket(dgram_socket &&other) noexcept
+liblocket::dgram_socket::dgram_socket(dgram_socket &&other) noexcept
     : socket{std::move(other)}, m_connected_addr{other.m_connected_addr},
       m_last_sender_addr{other.m_last_sender_addr} {
   other.m_connected_addr = nullptr;
   other.m_last_sender_addr = nullptr;
 }
 
-locket::dgram_socket::~dgram_socket() {
+liblocket::dgram_socket::~dgram_socket() {
   delete m_connected_addr;
   m_connected_addr = nullptr;
 
@@ -72,7 +72,7 @@ locket::dgram_socket::~dgram_socket() {
   m_last_sender_addr = nullptr;
 }
 
-void locket::dgram_socket::connect(const socket_addr *connect_addr) {
+void liblocket::dgram_socket::connect(const socket_addr *connect_addr) {
   if (m_connected_addr != nullptr) {
     throw std::runtime_error{"socket is already connected"};
   }
@@ -92,7 +92,7 @@ void locket::dgram_socket::connect(const socket_addr *connect_addr) {
   m_connected_addr = connect_addr->create_clone();
 }
 
-std::string locket::dgram_socket::recv(int flags /*= 0*/) const {
+std::string liblocket::dgram_socket::recv(int flags /*= 0*/) const {
   char message_buffer[m_k_max_message_length];
   ssize_t bytes_revcd{};
 
@@ -140,7 +140,7 @@ std::string locket::dgram_socket::recv(int flags /*= 0*/) const {
   return std::string{message_buffer};
 }
 
-void locket::dgram_socket::send(const std::string &message,
+void liblocket::dgram_socket::send(const std::string &message,
                                 const socket_addr *peer_addr /*= nullptr*/,
                                 int flags /*= 0*/) const {
   if ((m_connected_addr != nullptr) && (peer_addr != nullptr)) {
@@ -176,7 +176,7 @@ void locket::dgram_socket::send(const std::string &message,
   }
 }
 
-locket::socket_addr *locket::dgram_socket::get_connected_peer_addr() const {
+liblocket::socket_addr *liblocket::dgram_socket::get_connected_peer_addr() const {
   if (m_connected_addr == nullptr) {
     return nullptr;
   }
@@ -184,7 +184,7 @@ locket::socket_addr *locket::dgram_socket::get_connected_peer_addr() const {
   return m_connected_addr->create_clone();
 }
 
-locket::socket_addr *locket::dgram_socket::get_last_sender_addr() const {
+liblocket::socket_addr *liblocket::dgram_socket::get_last_sender_addr() const {
   if (m_last_sender_addr == nullptr) {
     return nullptr;
   }
@@ -192,8 +192,8 @@ locket::socket_addr *locket::dgram_socket::get_last_sender_addr() const {
   return m_last_sender_addr->create_clone();
 }
 
-locket::dgram_socket &
-locket::dgram_socket::operator=(dgram_socket &&other) noexcept {
+liblocket::dgram_socket &
+liblocket::dgram_socket::operator=(dgram_socket &&other) noexcept {
   if (this == &other) {
     return *this;
   }
@@ -215,7 +215,7 @@ locket::dgram_socket::operator=(dgram_socket &&other) noexcept {
   return *this;
 }
 
-void locket::dgram_socket::init() {
+void liblocket::dgram_socket::init() {
   m_sockfd = ::socket((static_cast<int>(get_domain())), SOCK_DGRAM, 0);
   if (m_sockfd == -1) {
     throw socket_error{"socket()", errno};

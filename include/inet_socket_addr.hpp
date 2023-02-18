@@ -1,5 +1,5 @@
-#ifndef LOCKET_INET_SOCKET_ADDR_HPP
-#define LOCKET_INET_SOCKET_ADDR_HPP
+#ifndef LIBLOCKET_INET_SOCKET_ADDR_HPP
+#define LIBLOCKET_INET_SOCKET_ADDR_HPP
 
 #include "socket_addr.hpp"
 
@@ -9,7 +9,7 @@
 
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class inet_socket_addr : public socket_addr {
 public:
   enum class ip_version {
@@ -40,6 +40,6 @@ protected:
   virtual void clear() override = 0;
   virtual void set_domain() override = 0;
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

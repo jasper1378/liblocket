@@ -1,5 +1,5 @@
-#ifndef LOCKET_ERRNO_ERROR_HPP
-#define LOCKET_ERRNO_ERROR_HPP
+#ifndef LIBLOCKET_ERRNO_ERROR_HPP
+#define LIBLOCKET_ERRNO_ERROR_HPP
 
 #include <cerrno>
 #include <cstring>
@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class errno_error : public std::runtime_error {
 protected:
   using conversion_func = std::string (*)(int);
@@ -47,6 +47,6 @@ public:
   errno_error &operator=(const errno_error &other) noexcept;
   errno_error &operator=(errno_error &&other) noexcept;
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

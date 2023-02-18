@@ -1,5 +1,5 @@
-#ifndef LOCKET_LOCKET_HPP
-#define LOCKET_LOCKET_HPP
+#ifndef LIBLOCKET_LIBLOCKET_HPP
+#define LIBLOCKET_LIBLOCKET_HPP
 
 #include "addrinfo_error.hpp"
 #include "client_stream_socket.hpp"

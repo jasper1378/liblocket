@@ -1,5 +1,5 @@
-#ifndef LOCKET_UNIX_SOCKET_ADDR_HPP
-#define LOCKET_UNIX_SOCKET_ADDR_HPP
+#ifndef LIBLOCKET_UNIX_SOCKET_ADDR_HPP
+#define LIBLOCKET_UNIX_SOCKET_ADDR_HPP
 
 #include "socket_addr.hpp"
 
@@ -8,7 +8,7 @@
 
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class unix_socket_addr : public socket_addr {
 private:
   sockaddr_un m_addr;
@@ -49,6 +49,6 @@ private:
   void set_domain() override;
   bool check_if_abstract() const;
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

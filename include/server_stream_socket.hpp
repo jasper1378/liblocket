@@ -1,5 +1,5 @@
-#ifndef LOCKET_SERVER_STREAM_SOCKET_HPP
-#define LOCKET_SERVER_STREAM_SOCKET_HPP
+#ifndef LIBLOCKET_SERVER_STREAM_SOCKET_HPP
+#define LIBLOCKET_SERVER_STREAM_SOCKET_HPP
 
 #include "connected_stream_socket.hpp"
 #include "inet_4_socket_addr.hpp"
@@ -14,7 +14,7 @@
 
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class server_stream_socket : public stream_socket {
 private:
   bool m_is_listening;
@@ -45,6 +45,6 @@ public:
 
   server_stream_socket &operator=(const server_stream_socket &other) = delete;
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

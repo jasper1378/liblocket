@@ -1,5 +1,5 @@
-#ifndef LOCKET_CLIENT_STREAM_SOCKET_HPP
-#define LOCKET_CLIENT_STREAM_SOCKET_HPP
+#ifndef LIBLOCKET_CLIENT_STREAM_SOCKET_HPP
+#define LIBLOCKET_CLIENT_STREAM_SOCKET_HPP
 
 #include "inet_4_socket_addr.hpp"
 #include "inet_6_socket_addr.hpp"
@@ -13,7 +13,7 @@
 
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class client_stream_socket : public stream_socket {
 private:
   socket_addr *m_connected_addr;
@@ -42,6 +42,6 @@ public:
 
   client_stream_socket &operator=(const client_stream_socket &other) = delete;
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef LOCKET_ADDRINFO_ERROR_HPP
-#define LOCKET_ADDRINFO_ERROR_HPP
+#ifndef LIBLOCKET_ADDRINFO_ERROR_HPP
+#define LIBLOCKET_ADDRINFO_ERROR_HPP
 
 #include "errno_error.hpp"
 #include "socket_error.hpp"
@@ -12,7 +12,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class addrinfo_error : public socket_error {
 public:
   enum class func { getaddrinfo = 0, getnameinfo = 1 };
@@ -46,6 +46,6 @@ public:
 private:
   static std::string func_to_string(func function);
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

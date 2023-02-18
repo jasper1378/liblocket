@@ -1,5 +1,5 @@
-#ifndef LOCKET_INET_6_SOCKET_ADDR_HPP
-#define LOCKET_INET_6_SOCKET_ADDR_HPP
+#ifndef LIBLOCKET_INET_6_SOCKET_ADDR_HPP
+#define LIBLOCKET_INET_6_SOCKET_ADDR_HPP
 
 #include "inet_socket_addr.hpp"
 #include "socket_addr.hpp"
@@ -10,7 +10,7 @@
 
 #include <string>
 
-namespace locket {
+namespace liblocket {
 class inet6_socket_addr : public inet_socket_addr {
 private:
   sockaddr_in6 m_addr;
@@ -54,6 +54,6 @@ private:
   void init(const std::string &saddr, in_port_t port);
   static in6_addr resolve_name(const std::string &saddr);
 };
-} // namespace locket
+} // namespace liblocket
 
 #endif

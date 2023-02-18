@@ -18,37 +18,37 @@
 #include <string>
 #include <utility>
 
-locket::socket::socket(socket_addr::sock_domain domain)
+liblocket::socket::socket(socket_addr::sock_domain domain)
     : m_sockfd{-1}, m_domain{domain}, m_bound_addr{nullptr} {}
 
-locket::socket::socket(int sockfd)
+liblocket::socket::socket(int sockfd)
     : m_sockfd{sockfd}, m_domain{socket_addr::sock_domain::UNK}, m_bound_addr{
                                                                      nullptr} {
   m_domain =
       static_cast<socket_addr::sock_domain>(get_socket_option<int>(SO_DOMAIN));
 }
 
-locket::socket::socket(socket &&other) noexcept
+liblocket::socket::socket(socket &&other) noexcept
     : m_sockfd{other.m_sockfd}, m_domain{other.m_domain},
       m_bound_addr{other.m_bound_addr} {
   other.m_sockfd = -1;
   other.m_bound_addr = nullptr;
 }
 
-locket::socket::~socket() {
+liblocket::socket::~socket() {
   delete m_bound_addr;
   m_bound_addr = nullptr;
 
   close(false);
 }
 
-int locket::socket::get_sock_fd() { return m_sockfd; }
+int liblocket::socket::get_sock_fd() { return m_sockfd; }
 
-locket::socket_addr::sock_domain locket::socket::get_domain() const {
+liblocket::socket_addr::sock_domain liblocket::socket::get_domain() const {
   return m_domain;
 }
 
-locket::socket_addr *locket::socket::get_bound_addr() const {
+liblocket::socket_addr *liblocket::socket::get_bound_addr() const {
   if (m_bound_addr == nullptr) {
     return nullptr;
   }
@@ -56,7 +56,7 @@ locket::socket_addr *locket::socket::get_bound_addr() const {
   return m_bound_addr->create_clone();
 }
 
-void locket::socket::bind(const socket_addr *bind_addr) {
+void liblocket::socket::bind(const socket_addr *bind_addr) {
   if (m_bound_addr != nullptr) {
     throw std::runtime_error{"socket is already bound"};
   }
@@ -74,7 +74,7 @@ void locket::socket::bind(const socket_addr *bind_addr) {
   m_bound_addr = bind_addr->create_clone();
 }
 
-int locket::socket::create_clone() const {
+int liblocket::socket::create_clone() const {
   const int new_sockfd{dup(m_sockfd)};
 
   if (new_sockfd == -1) {
@@ -84,13 +84,13 @@ int locket::socket::create_clone() const {
   return new_sockfd;
 }
 
-void locket::socket::shutdown(shutdown_how how) {
+void liblocket::socket::shutdown(shutdown_how how) {
   if (::shutdown(m_sockfd, static_cast<int>(how)) == -1) {
     throw socket_error{"shutdown()", errno};
   }
 }
 
-locket::socket &locket::socket::operator=(socket &&other) noexcept {
+liblocket::socket &liblocket::socket::operator=(socket &&other) noexcept {
   if (this == &other) {
     return *this;
   }
@@ -108,7 +108,7 @@ locket::socket &locket::socket::operator=(socket &&other) noexcept {
   return *this;
 }
 
-void locket::socket::close(bool throw_on_error /*= true*/) {
+void liblocket::socket::close(bool throw_on_error /*= true*/) {
   if (m_sockfd != -1) {
     if (::close(m_sockfd) == -1) {
       if (throw_on_error == true) {

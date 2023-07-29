@@ -10,8 +10,10 @@ LINK_FLAGS := -shared
 RELEASE_LINK_FLAGS :=
 DEBUG_LINK_FLAGS :=
 SOURCE_DIRS := ./src
+SOURCE_FILE_EXT := .cpp
 SUBMODULE_DIR := ./submodules
 INCLUDE_DIRS := ./include $(wildcard $(SUBMODULE_DIR)/*/include)
+HEADER_FILE_EXT := .hpp
 LIBRARIES :=
 SUBMODULE_OBJECTS := $(wildcard $(SUBMODULE_DIR)/*/build/*.a)
 INSTALL_PATH := /usr/local
@@ -37,7 +39,7 @@ release: export LDFLAGS := $(LDFLAGS) $(LINK_FLAGS) $(RELEASE_LINK_FLAGS)
 debug: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) $(DEBUG_COMPILE_FLAGS)
 debug: export LDFLAGS := $(LDFLAGS) $(LINK_FLAGS) $(DEBUG_LINK_FLAGS)
 
-SOURCES := $(shell find $(SOURCE_DIRS) -type f -name '*.cpp')
+SOURCES := $(shell find $(SOURCE_DIRS) -type f -name '*$(SOURCE_FILE_EXT)')
 OBJECTS := $(SOURCES:%=$(BUILD_DIR)/%.o)
 DEPENDENCIES := $(OBJECTS:.o=.d)
 
@@ -59,7 +61,7 @@ $(BUILD_DIR)/$(SHARED_LIB_NAME): $(OBJECTS)
 $(BUILD_DIR)/$(STATIC_LIB_NAME): $(OBJECTS)
 	ar rcs $@ $(OBJECTS) $(SUBMODULE_OBJECTS)
 
-$(BUILD_DIR)/%.cpp.o: %.cpp
+$(BUILD_DIR)/%$(SOURCE_FILE_EXT).o: %$(SOURCE_FILE_EXT)
 	@mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 

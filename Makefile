@@ -3,15 +3,17 @@
 
 LIB_NAME := liblocket
 CXX := g++
-COMPILE_FLAGS := -fPIC -std=c++17 -Wall -Wextra -g
+COMPILE_FLAGS := -fPIC -std=c++20 -Wall -Wextra -g
 RELEASE_COMPILE_FLAGS := -O2 -DNDEBUG
 DEBUG_COMPILE_FLAGS := -Og -DDEBUG
 LINK_FLAGS := -shared
 RELEASE_LINK_FLAGS :=
 DEBUG_LINK_FLAGS :=
 SOURCE_DIRS := ./src
-INCLUDE_DIR := ./include
+SUBMODULE_DIR := ./submodules
+INCLUDE_DIRS := ./include $(wildcard $(SUBMODULE_DIR)/*/include)
 LIBRARIES :=
+SUBMODULE_OBJECTS := $(wildcard $(SUBMODULE_DIR)/*/build/*.a)
 INSTALL_PATH := /usr/local
 
 STATIC_LIB_NAME := $(LIB_NAME).a
@@ -25,7 +27,7 @@ SHELL := /bin/bash
 
 .SUFFIXES:
 
-INCLUDE_FLAGS := $(addprefix -I, $(shell find $(INCLUDE_DIR) -type d))
+INCLUDE_FLAGS := $(addprefix -I, $(shell find $(INCLUDE_DIRS) -type d))
 export CPPFLAGS := $(INCLUDE_FLAGS) -MMD -MP
 
 LINK_FLAGS += $(addprefix -l, $(LIBRARIES))
@@ -52,10 +54,10 @@ all: $(BUILD_DIR)/$(SHARED_LIB_NAME) $(BUILD_DIR)/$(STATIC_LIB_NAME)
 
 
 $(BUILD_DIR)/$(SHARED_LIB_NAME): $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CXX) $(OBJECTS) $(SUBMODULE_OBJECTS) $(LDFLAGS) -o $@
 
 $(BUILD_DIR)/$(STATIC_LIB_NAME): $(OBJECTS)
-	ar rcs $@ $(OBJECTS)
+	ar rcs $@ $(OBJECTS) $(SUBMODULE_OBJECTS)
 
 $(BUILD_DIR)/%.cpp.o: %.cpp
 	@mkdir -p $(dir $@)
@@ -67,7 +69,7 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 install:
 	@install -v -Dm755 $(BUILD_DIR)/$(SHARED_LIB_NAME) -t $(LIB_INSTALL_PATH)/
 	@install -v -Dm644 $(BUILD_DIR)/$(STATIC_LIB_NAME) -t $(LIB_INSTALL_PATH)/
-	@install -v -Dm644 $(INCLUDE_DIR)/* -t $(HEADER_INSTALL_PATH)/$(LIB_NAME)
+	@install -v -Dm644 $(INCLUDE_DIRS)/* -t $(HEADER_INSTALL_PATH)/$(LIB_NAME)
 
 .PHONY: uninstall
 uninstall:

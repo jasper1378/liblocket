@@ -65,4 +65,4 @@ Errors resulting from `getaddrinfo()` and `getnameinfo()` will throw `liblocket:
 All types of sockets (datagram, stream, etc.) inherit from a common `socket` base class. Most take socket addresses as arguments. All types of socket addresses (IPv4, IPv6, Unix) inherit from a common `socket_addr` base class. Sockets can be moved, but not copied. The libraries implements RAII (resource acquisition is initialization), which is to say that sockets will automatically clean up after themselves when they go out of scope. The library uses exceptions for error handling. Errors resulting from functions that usually set `errno` will throw something that inherits from `errno_error`, an exception class inheriting from `std::runtime_error` that provides access to the `errno` value. Everything else just throws `std::runtime_error`.
 
 ## License
-See [LICENSE.md](LICENSE.md) for details.
+See [LICENSE](LICENSE) for details.

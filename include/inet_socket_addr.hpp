@@ -13,13 +13,13 @@ namespace liblocket {
 class inet_socket_addr : public socket_addr {
 public:
   enum class ip_version {
-    IPv4,
-    IPv6,
+    ipv4,
+    ipv6,
   };
 
   enum class byte_order {
-    HOST,
-    NET,
+    host,
+    net,
   };
 
 public:

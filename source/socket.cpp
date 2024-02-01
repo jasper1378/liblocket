@@ -22,8 +22,8 @@ liblocket::socket::socket(socket_addr::sock_domain domain)
     : m_sockfd{-1}, m_domain{domain}, m_bound_addr{nullptr} {}
 
 liblocket::socket::socket(int sockfd)
-    : m_sockfd{sockfd}, m_domain{socket_addr::sock_domain::UNK}, m_bound_addr{
-                                                                     nullptr} {
+    : m_sockfd{sockfd}, m_domain{socket_addr::sock_domain::unk},
+      m_bound_addr{nullptr} {
   m_domain =
       static_cast<socket_addr::sock_domain>(get_socket_option<int>(SO_DOMAIN));
 }

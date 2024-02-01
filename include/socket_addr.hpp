@@ -9,10 +9,10 @@ namespace liblocket {
 class socket_addr {
 public:
   enum class sock_domain {
-    UNK = 0,
-    UNIX = AF_UNIX,
-    INET4 = AF_INET,
-    INET6 = AF_INET6,
+    unk = 0,
+    unix = AF_UNIX,
+    inet4 = AF_INET,
+    inet6 = AF_INET6,
   };
 
 public:

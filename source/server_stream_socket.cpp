@@ -27,8 +27,8 @@ liblocket::server_stream_socket::server_stream_socket(
 
 liblocket::server_stream_socket::server_stream_socket(
     socket::dummy_type_bind, const socket_addr *bound_addr)
-    : stream_socket{socket::dummy_type_bind{}, bound_addr}, m_is_listening{
-                                                                false} {}
+    : stream_socket{socket::dummy_type_bind{}, bound_addr},
+      m_is_listening{false} {}
 
 liblocket::server_stream_socket::server_stream_socket(
     socket_addr::sock_domain domain, socket::dummy_type_listen,
@@ -39,8 +39,8 @@ liblocket::server_stream_socket::server_stream_socket(
 
 liblocket::server_stream_socket::server_stream_socket(
     const socket_addr *bound_addr, int backlog /*= m_k_backlog*/)
-    : stream_socket{socket::dummy_type_bind{}, bound_addr}, m_is_listening{
-                                                                false} {
+    : stream_socket{socket::dummy_type_bind{}, bound_addr},
+      m_is_listening{false} {
   listen(backlog);
 }
 
@@ -63,7 +63,8 @@ void liblocket::server_stream_socket::listen(int backlog /*= m_k_backlog*/) {
   }
 }
 
-liblocket::connected_stream_socket liblocket::server_stream_socket::accept() const {
+liblocket::connected_stream_socket
+liblocket::server_stream_socket::accept() const {
   std::unique_ptr<socket_addr> connected_addr{nullptr};
 
   if (get_bound_addr() == nullptr) {
@@ -75,13 +76,13 @@ liblocket::connected_stream_socket liblocket::server_stream_socket::accept() con
   }
 
   switch (get_domain()) {
-  case socket_addr::sock_domain::UNIX:
+  case socket_addr::sock_domain::unix:
     connected_addr = std::make_unique<unix_socket_addr>();
     break;
-  case socket_addr::sock_domain::INET4:
+  case socket_addr::sock_domain::inet4:
     connected_addr = std::make_unique<inet4_socket_addr>();
     break;
-  case socket_addr::sock_domain::INET6:
+  case socket_addr::sock_domain::inet6:
     connected_addr = std::make_unique<inet6_socket_addr>();
     break;
   default:
@@ -104,8 +105,8 @@ liblocket::connected_stream_socket liblocket::server_stream_socket::accept() con
   return connected_stream_socket;
 }
 
-liblocket::server_stream_socket &
-liblocket::server_stream_socket::operator=(server_stream_socket &&other) noexcept {
+liblocket::server_stream_socket &liblocket::server_stream_socket::operator=(
+    server_stream_socket &&other) noexcept {
   m_is_listening = other.m_is_listening;
 
   stream_socket::operator=(std::move(other));

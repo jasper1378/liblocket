@@ -22,9 +22,9 @@ public:
   struct dummy_type_listen {};
 
   enum class shutdown_how {
-    READ = SHUT_RD,
-    WRITE = SHUT_WR,
-    READWRITE = SHUT_RDWR,
+    read = SHUT_RD,
+    write = SHUT_WR,
+    readwrite = SHUT_RDWR,
   };
 
 protected:

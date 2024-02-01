@@ -34,14 +34,15 @@ liblocket::inet4_socket_addr::inet4_socket_addr(in_addr addr, in_port_t port)
 }
 
 liblocket::inet4_socket_addr::inet4_socket_addr(const std::string &saddr,
-                                             in_port_t port)
+                                                in_port_t port)
     : m_addr{} {
   inet4_socket_addr::clear();
   inet4_socket_addr::set_domain();
   init(saddr, port);
 }
 
-liblocket::inet4_socket_addr::inet4_socket_addr(const sockaddr *other) : m_addr{} {
+liblocket::inet4_socket_addr::inet4_socket_addr(const sockaddr *other)
+    : m_addr{} {
   if (other->sa_family != AF_INET) {
     throw std::invalid_argument{"sockaddr is not an inet address"};
   }
@@ -51,7 +52,7 @@ liblocket::inet4_socket_addr::inet4_socket_addr(const sockaddr *other) : m_addr{
 
 liblocket::inet4_socket_addr::inet4_socket_addr(const socket_addr *other)
     : m_addr{} {
-  if (other->domain() != sock_domain::INET4) {
+  if (other->domain() != sock_domain::inet4) {
     throw std::invalid_argument{"socket_addr is not an inet address"};
   }
 
@@ -64,7 +65,8 @@ liblocket::inet4_socket_addr::inet4_socket_addr(const sockaddr_in &other)
 liblocket::inet4_socket_addr::inet4_socket_addr(const inet4_socket_addr &other)
     : m_addr{other.m_addr} {}
 
-liblocket::inet4_socket_addr::inet4_socket_addr(inet4_socket_addr &&other) noexcept
+liblocket::inet4_socket_addr::inet4_socket_addr(
+    inet4_socket_addr &&other) noexcept
     : m_addr{other.m_addr} {}
 
 liblocket::inet4_socket_addr::~inet4_socket_addr() {}
@@ -73,12 +75,14 @@ liblocket::inet4_socket_addr *liblocket::inet4_socket_addr::create_new() const {
   return new inet4_socket_addr{};
 }
 
-liblocket::inet4_socket_addr *liblocket::inet4_socket_addr::create_clone() const {
+liblocket::inet4_socket_addr *
+liblocket::inet4_socket_addr::create_clone() const {
   return new inet4_socket_addr{*this};
 }
 
-liblocket::socket_addr::sock_domain liblocket::inet4_socket_addr::domain() const {
-  return sock_domain::INET4;
+liblocket::socket_addr::sock_domain
+liblocket::inet4_socket_addr::domain() const {
+  return sock_domain::inet4;
 }
 
 socklen_t liblocket::inet4_socket_addr::size() const { return m_k_size; }
@@ -119,7 +123,9 @@ const sockaddr_in *liblocket::inet4_socket_addr::socket_addr_in4_ptr() const {
 
 in_port_t liblocket::inet4_socket_addr::port() const { return m_addr.sin_port; }
 
-in_addr liblocket::inet4_socket_addr::address() const { return m_addr.sin_addr; }
+in_addr liblocket::inet4_socket_addr::address() const {
+  return m_addr.sin_addr;
+}
 
 liblocket::inet4_socket_addr &
 liblocket::inet4_socket_addr::operator=(const inet4_socket_addr &other) {
@@ -135,7 +141,9 @@ liblocket::inet4_socket_addr::operator=(inet4_socket_addr &&other) noexcept {
   return *this;
 }
 
-void liblocket::inet4_socket_addr::clear() { std::memset(&m_addr, 0, m_k_size); }
+void liblocket::inet4_socket_addr::clear() {
+  std::memset(&m_addr, 0, m_k_size);
+}
 
 void liblocket::inet4_socket_addr::set_domain() { m_addr.sin_family = AF_INET; }
 
@@ -144,8 +152,9 @@ void liblocket::inet4_socket_addr::init(in_addr addr, in_port_t port) {
   m_addr.sin_addr.s_addr = htonl(addr.s_addr);
 }
 
-void liblocket::inet4_socket_addr::init(const std::string &saddr, in_port_t port) {
-  init(resolve_name(saddr, byte_order::HOST), port);
+void liblocket::inet4_socket_addr::init(const std::string &saddr,
+                                        in_port_t port) {
+  init(resolve_name(saddr, byte_order::host), port);
 }
 
 in_addr liblocket::inet4_socket_addr::resolve_name(
@@ -168,7 +177,7 @@ in_addr liblocket::inet4_socket_addr::resolve_name(
     resolved_address =
         (reinterpret_cast<sockaddr_in *>(result->ai_addr))->sin_addr;
 
-    if (return_order == byte_order::HOST) {
+    if (return_order == byte_order::host) {
       resolved_address.s_addr = ntohl(resolved_address.s_addr);
     }
   } catch (...) {

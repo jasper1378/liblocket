@@ -53,7 +53,7 @@ private:
   void init(in_addr addr, in_port_t port);
   void init(const std::string &saddr, in_port_t port);
   static in_addr resolve_name(const std::string &saddr,
-                              byte_order return_order = byte_order::NET);
+                              byte_order return_order = byte_order::net);
 };
 } // namespace liblocket
 

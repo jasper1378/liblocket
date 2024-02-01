@@ -10,13 +10,14 @@
 #include <stdexcept>
 #include <string>
 
-liblocket::unix_socket_addr::unix_socket_addr() : m_addr{}, m_is_abstract{false} {
+liblocket::unix_socket_addr::unix_socket_addr()
+    : m_addr{}, m_is_abstract{false} {
   unix_socket_addr::clear();
   unix_socket_addr::set_domain();
 }
 
 liblocket::unix_socket_addr::unix_socket_addr(const std::string &path_or_name,
-                                           bool is_abstract /*= false*/)
+                                              bool is_abstract /*= false*/)
     : m_addr{}, m_is_abstract{is_abstract} {
   unix_socket_addr::clear();
   unix_socket_addr::set_domain();
@@ -42,7 +43,7 @@ liblocket::unix_socket_addr::unix_socket_addr(const sockaddr *other)
 
 liblocket::unix_socket_addr::unix_socket_addr(const socket_addr *other)
     : m_addr{}, m_is_abstract{} {
-  if (other->domain() != sock_domain::UNIX) {
+  if (other->domain() != sock_domain::unix) {
     throw std::invalid_argument{"socket_addr is not a Unix address"};
   }
 
@@ -71,8 +72,9 @@ liblocket::unix_socket_addr *liblocket::unix_socket_addr::create_clone() const {
   return new unix_socket_addr{*this};
 }
 
-liblocket::socket_addr::sock_domain liblocket::unix_socket_addr::domain() const {
-  return sock_domain::UNIX;
+liblocket::socket_addr::sock_domain
+liblocket::unix_socket_addr::domain() const {
+  return sock_domain::unix;
 }
 
 socklen_t liblocket::unix_socket_addr::size() const { return m_k_size; }
@@ -98,7 +100,9 @@ const sockaddr *liblocket::unix_socket_addr::socket_addr_ptr() const {
   return reinterpret_cast<const sockaddr *>(&m_addr);
 }
 
-sockaddr_un *liblocket::unix_socket_addr::socket_addr_un_ptr() { return &m_addr; }
+sockaddr_un *liblocket::unix_socket_addr::socket_addr_un_ptr() {
+  return &m_addr;
+}
 
 const sockaddr_un *liblocket::unix_socket_addr::socket_addr_un_ptr() const {
   return &m_addr;

@@ -26,7 +26,7 @@ liblocket::dgram_socket::dgram_socket(socket_addr::sock_domain domain)
 }
 
 liblocket::dgram_socket::dgram_socket(socket::dummy_type_bind,
-                                   const socket_addr *bound_addr)
+                                      const socket_addr *bound_addr)
     : socket{bound_addr->domain()}, m_connected_addr{nullptr},
       m_last_sender_addr{nullptr} {
   dgram_socket::init();
@@ -34,7 +34,7 @@ liblocket::dgram_socket::dgram_socket(socket::dummy_type_bind,
 }
 
 liblocket::dgram_socket::dgram_socket(socket::dummy_type_connect,
-                                   const socket_addr *connected_addr)
+                                      const socket_addr *connected_addr)
     : socket{connected_addr->domain()}, m_connected_addr{nullptr},
       m_last_sender_addr{nullptr} {
   dgram_socket::init();
@@ -42,7 +42,7 @@ liblocket::dgram_socket::dgram_socket(socket::dummy_type_connect,
 }
 
 liblocket::dgram_socket::dgram_socket(const socket_addr *bound_addr,
-                                   const socket_addr *connected_addr)
+                                      const socket_addr *connected_addr)
     : socket{bound_addr->domain()}, m_connected_addr{nullptr},
       m_last_sender_addr{nullptr} {
   dgram_socket::init();
@@ -106,13 +106,13 @@ std::string liblocket::dgram_socket::recv(int flags /*= 0*/) const {
     std::unique_ptr<socket_addr> last_sender_addr{nullptr};
 
     switch (get_domain()) {
-    case socket_addr::sock_domain::UNIX:
+    case socket_addr::sock_domain::unix:
       last_sender_addr = std::make_unique<unix_socket_addr>();
       break;
-    case socket_addr::sock_domain::INET4:
+    case socket_addr::sock_domain::inet4:
       last_sender_addr = std::make_unique<inet4_socket_addr>();
       break;
-    case socket_addr::sock_domain::INET6:
+    case socket_addr::sock_domain::inet6:
       last_sender_addr = std::make_unique<inet6_socket_addr>();
       break;
     default:
@@ -141,8 +141,8 @@ std::string liblocket::dgram_socket::recv(int flags /*= 0*/) const {
 }
 
 void liblocket::dgram_socket::send(const std::string &message,
-                                const socket_addr *peer_addr /*= nullptr*/,
-                                int flags /*= 0*/) const {
+                                   const socket_addr *peer_addr /*= nullptr*/,
+                                   int flags /*= 0*/) const {
   if ((m_connected_addr != nullptr) && (peer_addr != nullptr)) {
     throw std::runtime_error{
         "socket is connected but peer address is specified"};
@@ -176,7 +176,8 @@ void liblocket::dgram_socket::send(const std::string &message,
   }
 }
 
-liblocket::socket_addr *liblocket::dgram_socket::get_connected_peer_addr() const {
+liblocket::socket_addr *
+liblocket::dgram_socket::get_connected_peer_addr() const {
   if (m_connected_addr == nullptr) {
     return nullptr;
   }

@@ -28,7 +28,7 @@ liblocket::addrinfo_error::addrinfo_error(addrinfo_error &&other) noexcept
 liblocket::addrinfo_error::~addrinfo_error() {}
 
 liblocket::addrinfo_error::addrinfo_error(func function, int errno_num,
-                                       conversion_func errno_to_string)
+                                          conversion_func errno_to_string)
     : socket_error{func_to_string(function), errno_num,
                    ((errno_to_string != nullptr)
                         ? (errno_to_string)
@@ -61,8 +61,8 @@ liblocket::addrinfo_error::operator=(addrinfo_error &&other) noexcept {
 }
 
 std::string liblocket::addrinfo_error::func_to_string(func function) {
-  static constexpr const char *func_name_lut[]{"getaddrinfo()",
-                                               "getnameinfo()"};
+  static constexpr const char *k_func_name_lut[]{"getaddrinfo()",
+                                                 "getnameinfo()"};
 
-  return func_name_lut[static_cast<int>(function)];
+  return k_func_name_lut[static_cast<int>(function)];
 }

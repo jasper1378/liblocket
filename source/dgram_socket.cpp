@@ -9,6 +9,8 @@
 #include "socket_error.hpp"
 #include "unix_socket_addr.hpp"
 
+#include "bits-and-bytes/unreachable_error.hpp"
+
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -116,7 +118,7 @@ std::string liblocket::dgram_socket::recv(int flags /*= 0*/) const {
       last_sender_addr = std::make_unique<inet6_socket_addr>();
       break;
     default:
-      throw std::runtime_error{"this should be impossible..."};
+      throw bits_and_bytes::unreachable_error{};
       break;
     }
 

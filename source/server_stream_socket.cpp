@@ -11,6 +11,8 @@
 #include "stream_socket.hpp"
 #include "unix_socket_addr.hpp"
 
+#include "bits-and-bytes/unreachable_error.hpp"
+
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -86,7 +88,7 @@ liblocket::server_stream_socket::accept() const {
     connected_addr = std::make_unique<inet6_socket_addr>();
     break;
   default:
-    throw std::runtime_error{"this should be impossible..."};
+    throw bits_and_bytes::unreachable_error{};
     break;
   }
 

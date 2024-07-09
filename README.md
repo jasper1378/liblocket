@@ -6,18 +6,30 @@ Locket (Linux sOCKET) is a C++ wrapper library for the Linux sockets API.
 
 ## Installation
 
-Acquire the sources
+### 1a. Acquire the sources (git repository).
+
 ```
 $ git clone https://github.com/jasper1378/liblocket.git
 $ cd liblocket
+$ git submodule update --init --recursive
+$ autoreconf -i
 ```
-Build
+
+### 1b. Acquire the sources (distribution tarball).
+
 ```
+$ tar -xvf liblocket.tar.gz
+$ cd liblocket
+```
+
+### 2. Configure, build, and install.
+
+```
+$ mkdir build
+$ cd build
+$ ../configure # try `--help` for options
 $ make
-```
-Install
-```
-$ make install
+$ sudo make install
 ```
 
 ## Usage

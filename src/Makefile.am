@@ -17,6 +17,7 @@ liblocket_la_SOURCES =              \
 	inet_6_socket_addr.hpp      \
 	inet_socket_addr.cpp        \
 	inet_socket_addr.hpp        \
+	liblocket.hpp               \
 	server_stream_socket.cpp    \
 	server_stream_socket.hpp    \
 	socket_addr.cpp             \

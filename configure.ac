@@ -42,5 +42,5 @@ AC_CHECK_FUNCS([socket])
 
 # Output files.
 AC_CONFIG_FILES([Makefile src/Makefile include/liblocket/Makefile])
-AC_CONFIG_SUBDIRS([submodules/bits-and-bytes])
+AC_CONFIG_SUBDIRS([submods/bits-and-bytes])
 AC_OUTPUT

@@ -1,2 +1,2 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = submodules/bits-and-bytes src include/liblocket
+SUBDIRS = submods/bits-and-bytes src include/liblocket

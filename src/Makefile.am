@@ -30,4 +30,4 @@ liblocket_la_SOURCES =              \
 	stream_socket.hpp           \
 	unix_socket_addr.cpp        \
 	unix_socket_addr.hpp
-liblocket_la_CPPFLAGS = -I$(top_srcdir)/submods/bits-and-bytes/include
+liblocket_la_CPPFLAGS = -I$(top_srcdir)/deps/bits-and-bytes/include

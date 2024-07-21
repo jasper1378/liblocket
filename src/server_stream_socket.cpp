@@ -63,6 +63,8 @@ void liblocket::server_stream_socket::listen(int backlog /*= m_k_backlog*/) {
   if (::listen(m_sockfd, backlog) == -1) {
     throw socket_error{"listen()", errno};
   }
+
+  m_is_listening = true;
 }
 
 liblocket::connected_stream_socket

@@ -67,19 +67,3 @@ liblocket::connected_stream_socket &liblocket::connected_stream_socket::operator
 
   return *this;
 }
-
-liblocket::socket_addr *liblocket::connected_stream_socket::get_bound_addr() const {
-  throw std::runtime_error{
-      "connected_stream_sockets can not be bound. Yes, I'm well aware that "
-      "this violates the principle of having a common interface for all "
-      "derived classes."};
-  return nullptr;
-}
-
-void liblocket::connected_stream_socket::bind(__attribute__((unused))
-                                           const socket_addr *bound_addr) {
-  throw std::runtime_error{
-      "connected_stream_sockets can not be bound. Yes, I'm well aware that "
-      "this violates the principle of having a common interface for all "
-      "derived classes."};
-}

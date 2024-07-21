@@ -35,10 +35,6 @@ public:
 
   connected_stream_socket &
   operator=(const connected_stream_socket &other) = delete;
-
-private:
-  socket_addr *get_bound_addr() const override;
-  void bind(const socket_addr *bound_addr) override;
 };
 } // namespace liblocket
 
